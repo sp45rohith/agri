@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dashboard_screen.dart'; // Import the DashboardScreen
 import 'forgotpass_screen.dart'; // Import the ForgotPassScreen
+import 'register_screen.dart'; // Import the RegisterScreen
 
 class UserLoginScreen extends StatefulWidget {
-  const UserLoginScreen({
-    Key? key,
-    this.onLogin,
-    this.onForgotPassword,
-    this.onRegister,
-  }) : super(key: key);
-
-  final Function(String username, String password)? onLogin;
-  final VoidCallback? onForgotPassword;
-  final VoidCallback? onRegister;
+  const UserLoginScreen({Key? key}) : super(key: key);
 
   @override
   _UserLoginScreenState createState() => _UserLoginScreenState();
@@ -39,7 +31,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                 'https://dashboard.codeparrot.ai/api/assets/Z1kqX4OQ_MXMs9od'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
-              Colors.greenAccent, // Updated for consistency
+              Colors.greenAccent,
               BlendMode.overlay,
             ),
           ),
@@ -90,7 +82,13 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                 // Register link
                 Center(
                   child: TextButton(
-                    onPressed: widget.onRegister,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RegisterScreen()),
+                      );
+                    },
                     child: const Text(
                       'Don\'t have an account? Register here',
                       style: TextStyle(
