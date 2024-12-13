@@ -71,7 +71,15 @@ flutter:
     - assets/sugarcane.png
     - assets/tomato.png
     - assets/grapes.png
-    - assets/apple.png
+    - assets/black.png
+    - assets/red.png
+    - assets/alluvial.png
+    - assets/forest.png
+    - assets/desert.png
+    - assets/podzol.png
+    - assets/salinealkaline.png
+    - assets/andosol.png
+    - assets/tundra.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

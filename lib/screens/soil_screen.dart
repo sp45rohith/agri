@@ -7,6 +7,16 @@ class SoilScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Soil Selection"),
+        backgroundColor: const Color(0xFF00A86B),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context); // Navigate back to the previous screen
+          },
+        ),
+      ),
       backgroundColor: const Color(0xFFF0F0F0), // Light white background
       body: Container(
         width: double.infinity,
