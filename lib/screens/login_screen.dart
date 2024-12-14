@@ -4,7 +4,6 @@ class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   void navigateTo(BuildContext context, String userType) {
-    // Example navigation logic based on user type
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -15,76 +14,104 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen width and height for responsiveness
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Calculate responsive padding and button size
+    double buttonWidth = screenWidth * 0.8; // Buttons will take 80% of screen width
+    double buttonHeight = screenHeight * 0.1; // Buttons will be 10% of screen height
+    double iconSize = screenWidth * 0.1; // Icons will be scaled based on screen width
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          image: const DecorationImage(
-            image: NetworkImage('https://dashboard.codeparrot.ai/api/assets/Z1kZYG6v0cxbqCDW'),
-            fit: BoxFit.cover,
+          gradient: LinearGradient(
+            colors: [Colors.greenAccent, Colors.blue],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(30),
         ),
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Admin Login Section
+              // Admin Login Section with Rectangular Button
               GestureDetector(
                 onTap: () => navigateTo(context, 'Admin'),
-                child: Column(
-                  children: [
-                    Container(
-                      width: 175,
-                      height: 158,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage('https://dashboard.codeparrot.ai/api/assets/Z1kZYG6v0cxbqCDX'),
-                          fit: BoxFit.cover,
+                child: Container(
+                  width: buttonWidth, // Adjust width for responsive button size
+                  height: buttonHeight, // Adjust height for responsive button size
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15), // Rounded corners
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 6,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.admin_panel_settings,
+                        color: Colors.green,
+                        size: iconSize, // Responsive icon size
+                      ),
+                      const SizedBox(width: 15),
+                      Text(
+                        'Admin Login',
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.05, // Responsive text size
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Admin login',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 100), // Spacing
-              // Users Login Section
+              const SizedBox(height: 30), // Adjusted spacing between buttons
+
+              // User Login Section with Rectangular Button
               GestureDetector(
                 onTap: () => navigateTo(context, 'User'),
-                child: Column(
-                  children: [
-                    Container(
-                      width: 175,
-                      height: 158,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage('https://dashboard.codeparrot.ai/api/assets/Z1kZYW6v0cxbqCDY'),
-                          fit: BoxFit.cover,
+                child: Container(
+                  width: buttonWidth, // Adjust width for responsive button size
+                  height: buttonHeight, // Adjust height for responsive button size
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15), // Rounded corners
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 6,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.person,
+                        color: Colors.blue,
+                        size: iconSize, // Responsive icon size
+                      ),
+                      const SizedBox(width: 15),
+                      Text(
+                        'User Login',
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.05, // Responsive text size
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Users login',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

@@ -39,9 +39,9 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
               Text(
-                'Welcome to the App',
+                'Agric',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 44,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),

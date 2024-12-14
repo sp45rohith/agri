@@ -37,34 +37,47 @@ class OnboardingScreen extends StatelessWidget {
                       );
                     },
                     child: Container(
-                      width: size.width * 0.35,
-                      height: size.width * 0.35,
-                      decoration: const BoxDecoration(
+                      width: size.width * 0.8,  // Increase width for better visibility
+                      height: size.height * 0.12, // Adjust height for better balance
+                      decoration: BoxDecoration(
                         color: Colors.white,
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 6,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
                       ),
-                      child: Icon(
-                        Icons.person_outline,
-                        size: size.width * 0.15,
-                        color: const Color(0xFF1A1E1E),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.admin_panel_settings,
+                            size: size.width * 0.1, // Adjust icon size
+                            color: const Color(0xFF1A1E1E),
+                          ),
+                          SizedBox(width: size.width * 0.03),
+                          Text(
+                            'Admin login',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: size.width * 0.06, // Increase text size for readability
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  SizedBox(height: size.height * 0.02),
-                  Text(
-                    'Admin login',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: size.width * 0.045,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                  ),
+                  SizedBox(height: size.height * 0.05),
                 ],
               ),
             ),
 
-            // Users Login Section
+            // User Login Section
             Positioned(
               top: size.height * 0.6,
               child: Column(
@@ -78,29 +91,42 @@ class OnboardingScreen extends StatelessWidget {
                       );
                     },
                     child: Container(
-                      width: size.width * 0.35,
-                      height: size.width * 0.35,
-                      decoration: const BoxDecoration(
+                      width: size.width * 0.8,  // Increase width for better visibility
+                      height: size.height * 0.12, // Adjust height for better balance
+                      decoration: BoxDecoration(
                         color: Colors.white,
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 6,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
                       ),
-                      child: Icon(
-                        Icons.people_outline,
-                        size: size.width * 0.15,
-                        color: const Color(0xFF1A1E1E),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.people_outline,
+                            size: size.width * 0.1, // Adjust icon size
+                            color: const Color(0xFF1A1E1E),
+                          ),
+                          SizedBox(width: size.width * 0.03),
+                          Text(
+                            'Users login',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: size.width * 0.06, // Increase text size for readability
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  SizedBox(height: size.height * 0.02),
-                  Text(
-                    'Users login',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: size.width * 0.045,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                  ),
+                  SizedBox(height: size.height * 0.05),
                 ],
               ),
             ),
