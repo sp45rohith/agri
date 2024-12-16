@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'black_soil_detail_screen.dart'; // Import the Black Soil Detail Screen
+import 'chat_screen.dart'; // Import the ChatScreen
 
 class SelectSoilScreen extends StatefulWidget {
   final List<Map<String, String>> soils;
@@ -50,57 +52,80 @@ class _SelectSoilScreenState extends State<SelectSoilScreen> {
         title: const Text('Select Soil Type'),
         backgroundColor: const Color(0xFF00A86B),
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          image: const DecorationImage(
-            image: AssetImage('assets/background.png'), // Update path as needed
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.greenAccent,
-              BlendMode.overlay,
+      body: Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              image: const DecorationImage(
+                image: AssetImage('assets/background.png'), // Update path as needed
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.greenAccent,
+                  BlendMode.overlay,
+                ),
+              ),
+            ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  // Search Bar
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Search soil types...',
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.search, color: Color(0xFF00A86B)),
+                      ),
+                      onChanged: _filterSoils, // Filter soil types dynamically
+                    ),
+                  ),
+                  // Soil List
+                  Column(
+                    children: _filteredSoils
+                        .map((soil) => _buildSoilCard(soil['name']!, soil['icon']!))
+                        .toList(),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              // Search Bar
-              Container(
-                margin: const EdgeInsets.only(bottom: 20),
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'Search soil types...',
-                    border: InputBorder.none,
-                    prefixIcon: Icon(Icons.search, color: Color(0xFF00A86B)),
-                  ),
-                  onChanged: _filterSoils, // Filter soil types dynamically
-                ),
+          // Draggable Chatbot Icon
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: Draggable(
+              feedback: _chatbotIcon(),
+              childWhenDragging: Container(),
+              child: GestureDetector(
+                onTap: () {
+                  // Navigate to Chat Screen on tap
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ChatScreen()),
+                  );
+                },
+                child: _chatbotIcon(),
               ),
-              // Soil List
-              Column(
-                children: _filteredSoils
-                    .map((soil) => _buildSoilCard(soil['name']!, soil['icon']!))
-                    .toList(),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -108,8 +133,19 @@ class _SelectSoilScreenState extends State<SelectSoilScreen> {
   Widget _buildSoilCard(String soilName, String iconPath) {
     return GestureDetector(
       onTap: () {
-        // Handle onTap event
-        print('$soilName tapped');
+        // Navigate to the respective soil detail screen
+        if (soilName == 'Black Soil') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const BlackSoilDetailScreen()),
+          );
+        }
+        // Add additional conditions for other soil types
+        else if (soilName == 'Red Soil') {
+          // Navigate to Red Soil Detail Screen (Create this screen similarly)
+        } else if (soilName == 'Alluvial Soil') {
+          // Navigate to Alluvial Soil Detail Screen
+        } // You can keep adding conditions for each soil type
       },
       child: Container(
         width: double.infinity,
@@ -145,6 +181,29 @@ class _SelectSoilScreenState extends State<SelectSoilScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _chatbotIcon() {
+    return Container(
+      height: 60,
+      width: 60,
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Icon(
+        Icons.chat,
+        color: Colors.white,
+        size: 30,
       ),
     );
   }

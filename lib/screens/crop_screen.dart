@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'potato_screen.dart'; // Import the PotatoScreen file
+import 'corn_screen.dart'; // Import the CornScreen file
+import 'tomato_screen.dart'; // Import the TomatoScreen file
+import 'wheat_screen.dart'; // Import the WheatScreen file
+import 'grapes_screen.dart'; // Import the GrapesScreen file
+import 'banana_screen.dart'; // Import the BananaScreen file
+import 'paddy_screen.dart'; // Import the PaddyScreen file
+import 'apple_screen.dart'; // Import the AppleScreen file
+import 'sugarcane_screen.dart'; // Import the SugarcaneScreen file
 
 class CropScreen extends StatefulWidget {
   final List<Map<String, String>> crops;
 
   const CropScreen({
-    Key? key,
+    super.key,
     this.crops = const [
       {'name': 'Potato', 'icon': 'assets/potato.png'},
       {'name': 'Corn Crops', 'icon': 'assets/corn.png'},
@@ -16,7 +25,7 @@ class CropScreen extends StatefulWidget {
       {'name': 'Apple', 'icon': 'assets/apple.png'},
       {'name': 'Sugarcane', 'icon': 'assets/sugarcane.png'},
     ],
-  }) : super(key: key);
+  });
 
   @override
   State<CropScreen> createState() => _CropScreenState();
@@ -37,10 +46,64 @@ class _CropScreenState extends State<CropScreen> {
         _filteredCrops = widget.crops;
       } else {
         _filteredCrops = widget.crops
-            .where((crop) => crop['name']!.toLowerCase().contains(query.toLowerCase()))
+            .where((crop) =>
+                crop['name']!.toLowerCase().contains(query.toLowerCase()))
             .toList();
       }
     });
+  }
+
+  void _navigateToCrop(String cropName) {
+    if (cropName == 'Potato') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const PotatoScreen()),
+      );
+    } else if (cropName == 'Corn Crops') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CornScreen()),
+      );
+    } else if (cropName == 'Tomato') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const TomatoScreen()),
+      );
+    } else if (cropName == 'Wheat') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const WheatScreen()),
+      );
+    } else if (cropName == 'Grapes') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const GrapesScreen()), // Navigate to GrapesScreen
+      );
+    } else if (cropName == 'Banana') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const BananaScreen()), // Navigate to BananaScreen
+      );
+    } else if (cropName == 'Paddy') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const PaddyScreen()), // Navigate to PaddyScreen
+      );
+    } else if (cropName == 'Apple') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AppleScreen()), // Navigate to AppleScreen
+      );
+    } else if (cropName == 'Sugarcane') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SugarcaneScreen()), // Navigate to SugarcaneScreen
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Details for $cropName are not available yet.')),
+      );
+    }
   }
 
   @override
@@ -56,7 +119,7 @@ class _CropScreenState extends State<CropScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           image: const DecorationImage(
-            image: AssetImage('assets/background.png'), // Update path as needed
+            image: AssetImage('assets/background.png'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
               Colors.greenAccent,
@@ -95,7 +158,8 @@ class _CropScreenState extends State<CropScreen> {
               // Crop List
               Column(
                 children: _filteredCrops
-                    .map((crop) => _buildCropCard(crop['name']!, crop['icon']!))
+                    .map((crop) =>
+                        _buildCropCard(crop['name']!, crop['icon']!))
                     .toList(),
               ),
             ],
@@ -107,10 +171,7 @@ class _CropScreenState extends State<CropScreen> {
 
   Widget _buildCropCard(String cropName, String iconPath) {
     return GestureDetector(
-      onTap: () {
-        // Handle onTap event
-        print('$cropName tapped');
-      },
+      onTap: () => _navigateToCrop(cropName),
       child: Container(
         width: double.infinity,
         margin: const EdgeInsets.only(bottom: 20),
@@ -132,6 +193,10 @@ class _CropScreenState extends State<CropScreen> {
               iconPath,
               width: 40,
               height: 40,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.image_not_supported,
+                    color: Colors.grey, size: 40);
+              },
             ),
             const SizedBox(width: 20),
             Text(

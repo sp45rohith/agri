@@ -11,10 +11,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // Initial position of the profile icon
-  double _xPosition = 300;
-  double _yPosition = 600;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,10 +96,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
           ),
-          // Draggable Profile Icon at Bottom Right Corner
+          // Fixed Profile Icon at the Bottom Right Corner
           Positioned(
-            left: _xPosition,
-            top: _yPosition,
+            bottom: 20, // 20 pixels from the bottom
+            right: 20,  // 20 pixels from the right
             child: GestureDetector(
               onTap: () {
                 // Navigate to AccountScreen when profile icon is tapped
@@ -112,32 +108,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   MaterialPageRoute(builder: (context) => const AccountScreen()),
                 );
               },
-              child: Draggable(
-                feedback: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.person_outline, size: 30, color: Colors.grey), // Profile icon
-                ),
-                childWhenDragging: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.person_outline, size: 30, color: Colors.grey), // Profile icon
-                ),
-                onDragUpdate: (details) {
-                  setState(() {
-                    _xPosition = details.localPosition.dx - 30;
-                    _yPosition = details.localPosition.dy - 30;
-                  });
-                },
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.black,
-                  child: Icon(Icons.person_outline, size: 30, color: Colors.white), // Profile icon
-                ),
-              ),
+              child: _profileIcon(),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // Method to build a fixed profile icon
+  Widget _profileIcon() {
+    return CircleAvatar(
+      radius: 30, // Circular size for the profile icon
+      backgroundColor: Colors.black, // Background color for the profile icon
+      child: Icon(
+        Icons.person_outline, // User profile icon
+        color: Colors.white,  // Icon color white for clarity
+        size: 20,  // Icon size
       ),
     );
   }

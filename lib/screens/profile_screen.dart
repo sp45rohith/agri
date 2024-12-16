@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart'; // Import for kDebugMode
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -111,12 +112,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: GestureDetector(
                         onTap: () {
                           // Handle profile picture edit action here
-                          print("Edit Profile Picture Clicked");
                         },
                         child: Container(
                           padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF00A86B),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF00A86B),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -149,11 +149,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle save action here
-                    print("Profile Name: ${profileNameController.text}");
-                    print("Contact No.: ${contactNoController.text}");
-                    print("User Name: ${userNameController.text}");
-                    print("D.O.B: ${dobController.text}");
-                    print("E-mail: ${emailController.text}");
+                    if (kDebugMode) {
+                      print("Profile Name: ${profileNameController.text}");
+                      print("Contact No.: ${contactNoController.text}");
+                      print("User Name: ${userNameController.text}");
+                      print("D.O.B: ${dobController.text}");
+                      print("E-mail: ${emailController.text}");
+                    }
                     setState(() {
                       isEditing = false;
                     });

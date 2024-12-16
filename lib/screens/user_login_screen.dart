@@ -4,13 +4,13 @@ import 'forgotpass_screen.dart'; // Import the ForgotPassScreen
 import 'register_screen.dart'; // Import the RegisterScreen
 
 class UserLoginScreen extends StatefulWidget {
-  const UserLoginScreen({Key? key}) : super(key: key);
+  const UserLoginScreen({super.key});
 
   @override
-  _UserLoginScreenState createState() => _UserLoginScreenState();
+  UserLoginScreenState createState() => UserLoginScreenState();
 }
 
-class _UserLoginScreenState extends State<UserLoginScreen> {
+class UserLoginScreenState extends State<UserLoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -26,15 +26,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          image: const DecorationImage(
-            image: NetworkImage(
-                'https://dashboard.codeparrot.ai/api/assets/Z1kqX4OQ_MXMs9od'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.greenAccent,
-              BlendMode.overlay,
-            ),
-          ),
+          color: Colors.white, // Replace with a solid background color
         ),
         child: SingleChildScrollView(
           child: Padding(
@@ -179,9 +171,4 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
-<<<<<<< HEAD
 }
-=======
-}
-//purshoth
->>>>>>> 20dabd9d1d09412353aa8ca6182e2372de005a06
