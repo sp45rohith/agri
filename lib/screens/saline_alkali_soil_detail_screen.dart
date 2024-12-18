@@ -1,39 +1,37 @@
 import 'package:flutter/material.dart';
 
-class BlackSoilDetailScreen extends StatefulWidget {
-  const BlackSoilDetailScreen({Key? key}) : super(key: key);
+class SalineAlkaliSoilDetailScreen extends StatefulWidget {
+  const SalineAlkaliSoilDetailScreen({Key? key}) : super(key: key);
 
   @override
-  _BlackSoilDetailScreenState createState() => _BlackSoilDetailScreenState();
+  _SalineAlkaliSoilDetailScreenState createState() =>
+      _SalineAlkaliSoilDetailScreenState();
 }
 
-class _BlackSoilDetailScreenState extends State<BlackSoilDetailScreen> {
+class _SalineAlkaliSoilDetailScreenState
+    extends State<SalineAlkaliSoilDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Black Soil Details'),
-        backgroundColor: const Color(0xFF00A86B), // AppBar color remains solid
+        title: const Text('Saline-Alkali Soil Details'),
+        backgroundColor: const Color(0xFF00A86B),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title Card with Gradient Background
+            // Title Card
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.green.shade800, Colors.green.shade400], // Gradient similar to the AppBar
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: Colors.blue,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Center(
                 child: Text(
-                  'Black Soil',
+                  'Saline-Alkali Soil',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 28,
@@ -43,65 +41,70 @@ class _BlackSoilDetailScreenState extends State<BlackSoilDetailScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            // Image of Black Soil with Gradient Effect
+            // Image of Saline-Alkali Soil
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(
-                'assets/black.png', // Make sure to use the correct path for your image
+                'assets/salinealkaline.png', // Make sure to use the correct path for your image
                 width: double.infinity,
                 height: 200,
                 fit: BoxFit.cover,
               ),
             ),
             const SizedBox(height: 20),
-            // Information Cards with Gradient Background
+            // Information Cards
             _buildInfoCard(
               context,
               title: 'Climate',
               icon: Icons.thermostat,
-              content: 'Black soil thrives in dry and hot climates. Ideal temperature: 25°C - 40°C.',
+              content:
+                  'Saline-Alkali soil thrives in hot and arid climates with less rainfall.',
             ),
             _buildInfoCard(
               context,
               title: 'Soil Type',
               icon: Icons.grass,
-              content: 'Rich in calcium, iron, magnesium, and potassium. Known for high water retention.',
+              content:
+                  'Characterized by high salt content, reducing soil fertility for most plants.',
             ),
             _buildInfoCard(
               context,
               title: 'Planting Time',
               icon: Icons.calendar_today,
-              content: 'Best planted in summer, after the last frost. Ideal months: May - June.',
+              content:
+                  'Best planted during the rainy season, after leaching the soil to remove excess salt.',
             ),
             _buildInfoCard(
               context,
               title: 'Soil Composition',
               icon: Icons.format_list_bulleted,
-              content: 'Black soil contains high amounts of clay, organic matter, and minerals, making it rich and fertile for crop cultivation.',
+              content:
+                  'High sodium chloride content, poor drainage, and a high pH level.',
             ),
             _buildInfoCard(
               context,
-              title: 'Benefits of Black Soil',
+              title: 'Benefits of Saline-Alkali Soil',
               icon: Icons.star,
-              content: 'This soil retains moisture, supports better plant growth, and reduces the need for frequent irrigation, making it highly beneficial for crops.',
+              content:
+                  'Suitable for salt-tolerant crops like barley and cotton with proper soil treatment.',
             ),
             _buildInfoCard(
               context,
-              title: 'Uses of Black Soil',
+              title: 'Uses of Saline-Alkali Soil',
               icon: Icons.shopping_cart,
-              content: 'Ideal for growing crops like cotton, soybeans, maize, groundnut, and vegetables. Commonly used in agriculture for its high fertility.',
+              content:
+                  'Used for cultivation of salt-tolerant crops and can be treated for better soil health.',
             ),
             const SizedBox(height: 20),
             // Learn More Button
             ElevatedButton.icon(
               onPressed: () {
-                // Placeholder action
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Explore more about Black Soil!')),
+                  const SnackBar(content: Text('Explore more about Saline-Alkali Soil!')),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green, // Green color to match the gradient theme
+                backgroundColor: Colors.blue,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -119,7 +122,6 @@ class _BlackSoilDetailScreenState extends State<BlackSoilDetailScreen> {
     );
   }
 
-  // Function to build each info card with gradient background
   Widget _buildInfoCard(BuildContext context,
       {required String title, required IconData icon, required String content}) {
     return Card(
@@ -133,7 +135,7 @@ class _BlackSoilDetailScreenState extends State<BlackSoilDetailScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: Colors.green, size: 28),
+            Icon(icon, color: Colors.blue, size: 28),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

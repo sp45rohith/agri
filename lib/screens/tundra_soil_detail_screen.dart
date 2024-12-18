@@ -1,39 +1,36 @@
 import 'package:flutter/material.dart';
 
-class BlackSoilDetailScreen extends StatefulWidget {
-  const BlackSoilDetailScreen({Key? key}) : super(key: key);
+class TundraSoilDetailScreen extends StatefulWidget {
+  const TundraSoilDetailScreen({Key? key}) : super(key: key);
 
   @override
-  _BlackSoilDetailScreenState createState() => _BlackSoilDetailScreenState();
+  _TundraSoilDetailScreenState createState() =>
+      _TundraSoilDetailScreenState();
 }
 
-class _BlackSoilDetailScreenState extends State<BlackSoilDetailScreen> {
+class _TundraSoilDetailScreenState extends State<TundraSoilDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Black Soil Details'),
-        backgroundColor: const Color(0xFF00A86B), // AppBar color remains solid
+        title: const Text('Tundra Soil Details'),
+        backgroundColor: const Color(0xFF00A86B),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title Card with Gradient Background
+            // Title Card
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.green.shade800, Colors.green.shade400], // Gradient similar to the AppBar
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: Colors.blueGrey,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Center(
                 child: Text(
-                  'Black Soil',
+                  'Tundra Soil',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 28,
@@ -43,65 +40,66 @@ class _BlackSoilDetailScreenState extends State<BlackSoilDetailScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            // Image of Black Soil with Gradient Effect
+            // Image of Tundra Soil
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(
-                'assets/black.png', // Make sure to use the correct path for your image
+                'assets/tundra.png', // Make sure to use the correct path for your image
                 width: double.infinity,
                 height: 200,
                 fit: BoxFit.cover,
               ),
             ),
             const SizedBox(height: 20),
-            // Information Cards with Gradient Background
+            // Information Cards
             _buildInfoCard(
               context,
               title: 'Climate',
               icon: Icons.thermostat,
-              content: 'Black soil thrives in dry and hot climates. Ideal temperature: 25°C - 40°C.',
+              content: 'Cold climates with permafrost, minimal sunlight.',
             ),
             _buildInfoCard(
               context,
               title: 'Soil Type',
               icon: Icons.grass,
-              content: 'Rich in calcium, iron, magnesium, and potassium. Known for high water retention.',
+              content: 'Nutrient-poor, acidic, and frozen most of the year.',
             ),
             _buildInfoCard(
               context,
               title: 'Planting Time',
               icon: Icons.calendar_today,
-              content: 'Best planted in summer, after the last frost. Ideal months: May - June.',
+              content:
+                  'Short growing season, plants must adapt to extreme conditions.',
             ),
             _buildInfoCard(
               context,
               title: 'Soil Composition',
               icon: Icons.format_list_bulleted,
-              content: 'Black soil contains high amounts of clay, organic matter, and minerals, making it rich and fertile for crop cultivation.',
+              content:
+                  'Contains moss, lichen, and sparse vegetation due to freezing conditions.',
             ),
             _buildInfoCard(
               context,
-              title: 'Benefits of Black Soil',
+              title: 'Benefits of Tundra Soil',
               icon: Icons.star,
-              content: 'This soil retains moisture, supports better plant growth, and reduces the need for frequent irrigation, making it highly beneficial for crops.',
+              content: 'Suitable for limited plant growth but resilient in harsh climates.',
             ),
             _buildInfoCard(
               context,
-              title: 'Uses of Black Soil',
+              title: 'Uses of Tundra Soil',
               icon: Icons.shopping_cart,
-              content: 'Ideal for growing crops like cotton, soybeans, maize, groundnut, and vegetables. Commonly used in agriculture for its high fertility.',
+              content: 'Limited agricultural use, important for natural vegetation.',
             ),
             const SizedBox(height: 20),
             // Learn More Button
             ElevatedButton.icon(
               onPressed: () {
-                // Placeholder action
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Explore more about Black Soil!')),
+                  const SnackBar(content: Text('Explore more about Tundra Soil!')),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green, // Green color to match the gradient theme
+                backgroundColor: Colors.blueGrey,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -119,7 +117,6 @@ class _BlackSoilDetailScreenState extends State<BlackSoilDetailScreen> {
     );
   }
 
-  // Function to build each info card with gradient background
   Widget _buildInfoCard(BuildContext context,
       {required String title, required IconData icon, required String content}) {
     return Card(
@@ -133,7 +130,7 @@ class _BlackSoilDetailScreenState extends State<BlackSoilDetailScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: Colors.green, size: 28),
+            Icon(icon, color: Colors.blueGrey, size: 28),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

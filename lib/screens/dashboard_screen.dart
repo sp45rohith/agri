@@ -11,12 +11,30 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  TextEditingController _searchController = TextEditingController();
+  TextEditingController _noteController = TextEditingController(); // Controller for notes input
+  String searchText = "";
+  List<String> notes = []; // List to store notes
+
+  // List of categories (for filtering)
+  List<Map<String, String>> categories = [
+    {'title': 'Crops', 'imageUrl': 'assets/crops.png'},
+    {'title': 'Location', 'imageUrl': 'assets/location.png'},
+    // Add more categories here if needed
+  ];
+
   @override
   Widget build(BuildContext context) {
+    // Filter the categories based on search text
+    List<Map<String, String>> filteredCategories = categories
+        .where((category) => category['title']!.toLowerCase().contains(searchText.toLowerCase()))
+        .toList();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
         backgroundColor: const Color(0xFF00A86B),
+        elevation: 0, // Remove shadow for a cleaner look
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -69,28 +87,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Category: Crops
-                    _buildCategoryCard(
-                      context,
-                      'Crops',
-                      'assets/crops.png', // Update path as needed
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const CropScreen()),
-                        );
-                      },
-                    ),
+                    // Search Bar
+                    _buildSearchBar(),
                     const SizedBox(height: 20),
-                    // Category: Location
-                    _buildCategoryCard(
-                      context,
-                      'Location',
-                      'assets/location.png', // Update path as needed
-                      () {
-                        // Add location action
-                      },
+                    // Display filtered category cards
+                    if (filteredCategories.isEmpty)
+                      const Text(
+                        'No categories found',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      )
+                    else
+                      ...filteredCategories.map((category) {
+                        return _buildCategoryCard(
+                          context,
+                          category['title']!,
+                          category['imageUrl']!,
+                          () {
+                            if (category['title'] == 'Crops') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const CropScreen()),
+                              );
+                            }
+                            // Add actions for other categories if needed
+                          },
+                        );
+                      }).toList(),
+
+                    // Notes Section
+                    const SizedBox(height: 30),
+                    const Text(
+                      'Your Notes',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
+                    const SizedBox(height: 10),
+                    // Background Card for Notes Section
+                    _buildNotesBackgroundCard(),
                   ],
                 ),
               ),
@@ -99,7 +135,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // Fixed Profile Icon at the Bottom Right Corner
           Positioned(
             bottom: 20, // 20 pixels from the bottom
-            right: 20,  // 20 pixels from the right
+            right: 20, // 20 pixels from the right
             child: GestureDetector(
               onTap: () {
                 // Navigate to AccountScreen when profile icon is tapped
@@ -116,19 +152,71 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // Method to build a fixed profile icon
+  // Method to build a modern, professional profile icon
   Widget _profileIcon() {
-    return CircleAvatar(
-      radius: 30, // Circular size for the profile icon
-      backgroundColor: Colors.black, // Background color for the profile icon
-      child: Icon(
-        Icons.person_outline, // User profile icon
-        color: Colors.white,  // Icon color white for clarity
-        size: 20,  // Icon size
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [Color(0xFF00A86B), Colors.green.shade700], // Subtle gradient for a professional look
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: CircleAvatar(
+        radius: 30, // Profile size
+        backgroundColor: Colors.transparent, // Remove background color, using gradient instead
+        child: Icon(
+          Icons.person_outline, // User profile icon
+          color: Colors.white, // Icon color for better contrast
+          size: 30, // Slightly larger size for better visibility
+        ),
       ),
     );
   }
 
+  // Enhanced Search Bar with shadow and rounded corners
+  Widget _buildSearchBar() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: _searchController,
+        onChanged: (value) {
+          setState(() {
+            searchText = value;
+          });
+        },
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          hintText: "Search...",
+          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Category Card with gradient background and shadow
   Widget _buildCategoryCard(
     BuildContext context,
     String title,
@@ -142,13 +230,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         margin: const EdgeInsets.only(bottom: 20),
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
         decoration: BoxDecoration(
-          color: Colors.white,
+          gradient: LinearGradient(
+            colors: [Colors.green.withOpacity(0.7), Colors.green.withOpacity(0.5)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 6,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -164,13 +256,94 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title,
               style: const TextStyle(
                 fontFamily: 'Roboto',
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.bold,
                 fontSize: 18,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // Method to build the Notes input field
+  Widget _buildNotesInput() {
+    return TextField(
+      controller: _noteController,
+      decoration: InputDecoration(
+        hintText: 'Add a note about your crop...',
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: _addNote,
+        ),
+      ),
+    );
+  }
+
+  // Method to add a note to the notes list
+  void _addNote() {
+    if (_noteController.text.isNotEmpty) {
+      setState(() {
+        notes.add(_noteController.text);
+        _noteController.clear(); // Clear the input field after adding the note
+      });
+    }
+  }
+
+  // Method to build the list of saved notes
+  Widget _buildNotesList() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: notes.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(vertical: 5),
+          title: Text(
+            notes[index],
+            style: const TextStyle(color: Colors.black, fontSize: 16),
+          ),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete, color: Colors.black),
+            onPressed: () {
+              setState(() {
+                notes.removeAt(index); // Remove the note when delete icon is tapped
+              });
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  // Method to build the Notes background card with modern design
+  Widget _buildNotesBackgroundCard() {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildNotesInput(),
+          const SizedBox(height: 20),
+          _buildNotesList(),
+        ],
       ),
     );
   }
