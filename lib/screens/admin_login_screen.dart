@@ -74,16 +74,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      "Login to your account",
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                        color: Colors.white70,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
 
                     // Card for login form
                     if (!_isLoggedIn) ...[

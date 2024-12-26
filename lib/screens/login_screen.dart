@@ -36,7 +36,7 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Admin Login Section with Rectangular Button
+              // Admin Login Section with Gradient Background
               GestureDetector(
                 onTap: () => navigateTo(context, 'Admin'),
                 child: Container(
@@ -44,7 +44,11 @@ class LoginScreen extends StatelessWidget {
                   height: buttonHeight, // Adjust height for responsive button size
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15), // Rounded corners
-                    color: Colors.white,
+                    gradient: LinearGradient(
+                      colors: [Colors.green, Colors.lightGreenAccent], // Gradient colors
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
@@ -58,7 +62,7 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.admin_panel_settings,
-                        color: Colors.green,
+                        color: Colors.white, // Icon color changed to white
                         size: iconSize, // Responsive icon size
                       ),
                       const SizedBox(width: 15),
@@ -67,7 +71,7 @@ class LoginScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: screenWidth * 0.05, // Responsive text size
                           fontWeight: FontWeight.w700,
-                          color: Colors.black,
+                          color: Colors.white, // Changed to white
                         ),
                       ),
                     ],
@@ -76,7 +80,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30), // Adjusted spacing between buttons
 
-              // User Login Section with Rectangular Button
+              // User Login Section with Gradient Background
               GestureDetector(
                 onTap: () => navigateTo(context, 'User'),
                 child: Container(
@@ -84,7 +88,11 @@ class LoginScreen extends StatelessWidget {
                   height: buttonHeight, // Adjust height for responsive button size
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15), // Rounded corners
-                    color: Colors.white,
+                    gradient: LinearGradient(
+                      colors: [Colors.blue, Colors.lightBlueAccent], // Gradient colors
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
@@ -98,7 +106,7 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.person,
-                        color: Colors.blue,
+                        color: Colors.white, // Icon color changed to white
                         size: iconSize, // Responsive icon size
                       ),
                       const SizedBox(width: 15),
@@ -107,7 +115,7 @@ class LoginScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: screenWidth * 0.05, // Responsive text size
                           fontWeight: FontWeight.w700,
-                          color: Colors.black,
+                          color: Colors.white, // Changed to white
                         ),
                       ),
                     ],

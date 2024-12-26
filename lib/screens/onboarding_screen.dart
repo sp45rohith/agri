@@ -40,13 +40,17 @@ class OnboardingScreen extends StatelessWidget {
                       width: size.width * 0.8,  // Increase width for better visibility
                       height: size.height * 0.12, // Adjust height for better balance
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        gradient: LinearGradient(
+                          colors: [Colors.green, Colors.lightGreen],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.2),
                             blurRadius: 6,
-                            offset: Offset(0, 4),
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
@@ -56,7 +60,7 @@ class OnboardingScreen extends StatelessWidget {
                           Icon(
                             Icons.admin_panel_settings,
                             size: size.width * 0.1, // Adjust icon size
-                            color: const Color(0xFF1A1E1E),
+                            color: Colors.white, // Changed to white
                           ),
                           SizedBox(width: size.width * 0.03),
                           Text(
@@ -65,7 +69,7 @@ class OnboardingScreen extends StatelessWidget {
                               fontFamily: 'Poppins',
                               fontSize: size.width * 0.06, // Increase text size for readability
                               fontWeight: FontWeight.w700,
-                              color: Colors.black,
+                              color: Colors.white, // Changed to white
                             ),
                           ),
                         ],
@@ -94,13 +98,17 @@ class OnboardingScreen extends StatelessWidget {
                       width: size.width * 0.8,  // Increase width for better visibility
                       height: size.height * 0.12, // Adjust height for better balance
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        gradient: LinearGradient(
+                          colors: [Colors.green, Colors.lightGreen],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.2),
                             blurRadius: 6,
-                            offset: Offset(0, 4),
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
@@ -110,7 +118,7 @@ class OnboardingScreen extends StatelessWidget {
                           Icon(
                             Icons.people_outline,
                             size: size.width * 0.1, // Adjust icon size
-                            color: const Color(0xFF1A1E1E),
+                            color: Colors.white, // Changed to white
                           ),
                           SizedBox(width: size.width * 0.03),
                           Text(
@@ -119,7 +127,7 @@ class OnboardingScreen extends StatelessWidget {
                               fontFamily: 'Poppins',
                               fontSize: size.width * 0.06, // Increase text size for readability
                               fontWeight: FontWeight.w700,
-                              color: Colors.black,
+                              color: Colors.white, // Changed to white
                             ),
                           ),
                         ],
