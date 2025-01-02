@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'user_login_screen.dart'; // Import UserLoginScreen
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -10,10 +13,39 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _fullNameController = TextEditingController();
+  final _usernameController = TextEditingController(); // Updated from _fullNameController
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  Future<void> _register() async {
+    if (_passwordController.text != _confirmPasswordController.text) {
+      Fluttertoast.showToast(msg: "Passwords do not match");
+      return;
+    }
+
+    final response = await http.post(
+      Uri.parse('http://172.25.81.223/agric/register.php'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': _usernameController.text, // Updated from 'full_name'
+        'phone': _phoneController.text,
+        'password': _passwordController.text,
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (data['status'] == 'success') {
+      Fluttertoast.showToast(msg: "Registration successful");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const UserLoginScreen()),
+      );
+    } else {
+      Fluttertoast.showToast(msg: data['message']);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +76,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Full Name Field
+                  // Username Field
                   _buildInputField(
-                    label: 'Full Name',
-                    controller: _fullNameController,
+                    label: 'Username', // Updated from 'Full Name'
+                    controller: _usernameController, // Updated from _fullNameController
                     keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your full name';
+                        return 'Please enter your username'; // Updated from 'full name'
                       }
                       return null;
                     },
@@ -105,18 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     width: double.infinity,
                     height: 49,
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Handle registration logic
-                          // Navigate to UserLoginScreen
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const UserLoginScreen(),
-                            ),
-                          );
-                        }
-                      },
+                      onPressed: _register,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF00A86B),
                         shape: RoundedRectangleBorder(
@@ -182,7 +203,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _fullNameController.dispose();
+    _usernameController.dispose(); // Updated from _fullNameController
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();

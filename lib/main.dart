@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'screens/splash_screen.dart';
-import 'screens/onboarding_screen.dart';
+
+import 'package:myapp/screens/onboarding_screen.dart';
+
 
 
 class SplashScreen extends StatefulWidget {
@@ -34,10 +35,10 @@ class _SplashScreenState extends State<SplashScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
+        child: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Text(
                 'Agric',
                 style: TextStyle(

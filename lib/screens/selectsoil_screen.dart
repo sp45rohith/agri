@@ -8,7 +8,6 @@ import 'podzol_soil_detail_screen.dart';
 import 'saline_alkali_soil_detail_screen.dart';
 import 'andosol_soil_detail_screen.dart';
 import 'tundra_soil_detail_screen.dart';
-import 'chat_screen.dart';
 
 class SelectSoilScreen extends StatefulWidget {
   final List<Map<String, String>> soils;
@@ -144,23 +143,6 @@ class _SelectSoilScreenState extends State<SelectSoilScreen> {
                         .toList(),
                   ),
                 ],
-              ),
-            ),
-          ),
-          // Chatbot Icon
-          Positioned(
-            bottom: 20,
-            right: 20,
-            child: GestureDetector(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ChatScreen())),
-              child: Container(
-                height: 60,
-                width: 60,
-                decoration: const BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.chat, color: Colors.white, size: 30),
               ),
             ),
           ),

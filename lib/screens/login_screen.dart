@@ -36,86 +36,72 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Admin Login Section with Gradient Background
+              // Admin Login Section with Translucent Button
               GestureDetector(
                 onTap: () => navigateTo(context, 'Admin'),
                 child: Container(
-                  width: buttonWidth, // Adjust width for responsive button size
-                  height: buttonHeight, // Adjust height for responsive button size
+                  width: buttonWidth,
+                  height: buttonHeight,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15), // Rounded corners
-                    gradient: LinearGradient(
-                      colors: [Colors.green, Colors.lightGreenAccent], // Gradient colors
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white.withOpacity(0.2), // Translucent white
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.5), // Semi-transparent border
+                      width: 1.5,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.admin_panel_settings,
-                        color: Colors.white, // Icon color changed to white
-                        size: iconSize, // Responsive icon size
+                        color: Colors.white,
+                        size: iconSize,
                       ),
                       const SizedBox(width: 15),
                       Text(
                         'Admin Login',
                         style: TextStyle(
-                          fontSize: screenWidth * 0.05, // Responsive text size
+                          fontSize: screenWidth * 0.05,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white, // Changed to white
+                          color: Colors.white,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 30), // Adjusted spacing between buttons
+              const SizedBox(height: 30),
 
-              // User Login Section with Gradient Background
+              // User Login Section with Translucent Button
               GestureDetector(
                 onTap: () => navigateTo(context, 'User'),
                 child: Container(
-                  width: buttonWidth, // Adjust width for responsive button size
-                  height: buttonHeight, // Adjust height for responsive button size
+                  width: buttonWidth,
+                  height: buttonHeight,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15), // Rounded corners
-                    gradient: LinearGradient(
-                      colors: [Colors.blue, Colors.lightBlueAccent], // Gradient colors
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white.withOpacity(0.2), // Translucent white
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.5), // Semi-transparent border
+                      width: 1.5,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.person,
-                        color: Colors.white, // Icon color changed to white
-                        size: iconSize, // Responsive icon size
+                        color: Colors.white,
+                        size: iconSize,
                       ),
                       const SizedBox(width: 15),
                       Text(
                         'User Login',
                         style: TextStyle(
-                          fontSize: screenWidth * 0.05, // Responsive text size
+                          fontSize: screenWidth * 0.05,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white, // Changed to white
+                          color: Colors.white,
                         ),
                       ),
                     ],

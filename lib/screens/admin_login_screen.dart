@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'admn_dashboard.dart'; // Make sure to import the AdminDashboard screen
 
 class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({Key? key}) : super(key: key);
@@ -135,6 +136,36 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           child: const Center(
                             child: Text(
                               'Manage Users',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // New "Manage Crops" button
+                        ElevatedButton(
+                          onPressed: () {
+                            // Navigate to AdminDashboard screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const AdminDashboard()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            backgroundColor: const Color(0xFF00A86B),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            elevation: 5,
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Manage Crops',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16,
@@ -297,36 +328,29 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           ),
         ),
         const SizedBox(height: 20),
-
-        // User List
         const Text(
-          'User List',
+          'Existing Users',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        ..._usersList.map(
-          (user) => Card(
-            child: ListTile(
-              leading: const Icon(Icons.person, color: Colors.green),
-              title: Text(user),
+        const SizedBox(height: 10),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: _usersList.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(_usersList[index]),
               trailing: IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () {
                   setState(() {
-                    _usersList.remove(user);
+                    _usersList.removeAt(index);
                   });
                 },
               ),
-            ),
-          ),
+            );
+          },
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 }

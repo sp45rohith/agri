@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart'; // Import for kDebugMode
 import 'package:flutter/material.dart';
+import 'dart:convert'; // Import for jsonEncode and jsonDecode
+import 'package:http/http.dart' as http; // Import for http requests
+import 'package:fluttertoast/fluttertoast.dart'; // Import for Fluttertoast
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -38,6 +41,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
     userNameController = TextEditingController(text: widget.userName);
     dobController = TextEditingController(text: widget.dob);
     emailController = TextEditingController(text: widget.email);
+    _fetchProfileData(); // Fetch profile data on init
+  }
+
+  Future<void> _fetchProfileData() async {
+    final response = await http.post(
+      Uri.parse('http://172.25.81.223/agric/get_profile.php'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'username': widget.userName}),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (data['status'] == 'success') {
+      setState(() {
+        profileNameController.text = data['data']['username'];
+        contactNoController.text = data['data']['phone'];
+        dobController.text = data['data']['dob'];
+        emailController.text = data['data']['email'];
+      });
+    } else {
+      Fluttertoast.showToast(msg: data['message']);
+    }
   }
 
   @override

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ForgotPassScreen extends StatefulWidget {
   const ForgotPassScreen({Key? key}) : super(key: key);
@@ -18,47 +21,48 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
         title: const Text("Reset Password"),
         backgroundColor: const Color(0xFF00A86B),
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          image: const DecorationImage(
-            image: NetworkImage(
-                'https://dashboard.codeparrot.ai/api/assets/Z1kqX4OQ_MXMs9od'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.green,
-              BlendMode.overlay,
+      body: Stack(
+        children: [
+          // Gradient background
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF00A86B), Color(0xFF00796B)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
           ),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 150, 20, 40),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // New Password field
-                _buildLabel('New Password'),
-                _buildTextField(_newPasswordController, true),
+          // Main content
+          Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // New Password field
+                    _buildLabel('New Password'),
+                    _buildTextField(_newPasswordController, true),
 
-                const SizedBox(height: 30),
+                    const SizedBox(height: 30),
 
-                // Confirm Password field
-                _buildLabel('Confirm Password'),
-                _buildTextField(_confirmPasswordController, true),
+                    // Confirm Password field
+                    _buildLabel('Confirm Password'),
+                    _buildTextField(_confirmPasswordController, true),
 
-                const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-                // Confirm button
-                _buildConfirmButton(),
+                    // Confirm button
+                    _buildConfirmButton(),
 
-                const SizedBox(height: 20),
-              ],
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -70,7 +74,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
         fontFamily: 'Roboto',
         fontWeight: FontWeight.w700,
         fontSize: 16,
-        color: Colors.black,
+        color: Colors.white,
       ),
     );
   }
@@ -78,13 +82,13 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
   Widget _buildTextField(TextEditingController controller, bool obscureText) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.grey[100],
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 5,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -104,10 +108,25 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
 
   Widget _buildConfirmButton() {
     return ElevatedButton(
-      onPressed: () {
+      onPressed: () async {
         if (_newPasswordController.text == _confirmPasswordController.text) {
-          // Handle password reset logic here
-          Navigator.pop(context); // Navigate back after confirmation
+          final response = await http.post(
+            Uri.parse('http://172.25.81.223/agric/reset_password.php'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'username': 'testuser', // Replace with the actual username
+              'new_password': _newPasswordController.text,
+            }),
+          );
+
+          final data = jsonDecode(response.body);
+
+          if (data['status'] == 'success') {
+            Fluttertoast.showToast(msg: "Password reset successful");
+            Navigator.pop(context); // Navigate back after confirmation
+          } else {
+            Fluttertoast.showToast(msg: data['message']);
+          }
         } else {
           // Show error if passwords do not match
           ScaffoldMessenger.of(context).showSnackBar(

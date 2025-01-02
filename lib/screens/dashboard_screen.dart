@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/screens/account_screen.dart';
 import 'package:myapp/screens/crop_screen.dart';
-import 'soil_screen.dart'; // Import the SoilScreen
-import 'account_screen.dart'; // Import the AccountScreen (where profile screen will be)
+import 'package:myapp/screens/selectsoil_screen.dart';
+import 'package:myapp/screens/soil_screen.dart';
+
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -14,12 +16,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _noteController = TextEditingController(); // Controller for notes input
   String searchText = "";
-  List<String> notes = []; // List to store notes
+  List<Note> notes = []; // List to store notes as objects
 
   // List of categories (for filtering)
   List<Map<String, String>> categories = [
     {'title': 'Crops', 'imageUrl': 'assets/crops.png'},
     {'title': 'Location', 'imageUrl': 'assets/location.png'},
+    {'title': 'Soils', 'imageUrl': 'assets/select soil.png'}, // Added the Soils category
     // Add more categories here if needed
   ];
 
@@ -108,8 +111,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 context,
                                 MaterialPageRoute(builder: (context) => const CropScreen()),
                               );
+                            } else if (category['title'] == 'Soils') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const SelectSoilScreen()), // Navigate to SelectSoilScreen
+                              );
                             }
-                            // Add actions for other categories if needed
                           },
                         );
                       }).toList(),
@@ -291,60 +298,124 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void _addNote() {
     if (_noteController.text.isNotEmpty) {
       setState(() {
-        notes.add(_noteController.text);
+        notes.add(Note(text: _noteController.text, id: DateTime.now().toString()));
         _noteController.clear(); // Clear the input field after adding the note
       });
     }
   }
 
-  // Method to build the list of saved notes
+  // Method to delete a note
+  void _deleteNote(String id) {
+    setState(() {
+      notes.removeWhere((note) => note.id == id); // Remove note with matching ID
+    });
+  }
+
+  // Method to edit a note
+  void _editNote(String id, String newText) {
+    setState(() {
+      Note note = notes.firstWhere((note) => note.id == id);
+      note.text = newText; // Update the note text
+    });
+  }
+
+  // Method to build the list of saved notes with delete and edit option
   Widget _buildNotesList() {
     return ListView.builder(
       shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       itemCount: notes.length,
       itemBuilder: (context, index) {
-        return ListTile(
-          contentPadding: const EdgeInsets.symmetric(vertical: 5),
-          title: Text(
-            notes[index],
-            style: const TextStyle(color: Colors.black, fontSize: 16),
+        return Card(
+          margin: const EdgeInsets.only(bottom: 10),
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete, color: Colors.black),
-            onPressed: () {
-              setState(() {
-                notes.removeAt(index); // Remove the note when delete icon is tapped
-              });
-            },
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(notes[index].text),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () {
+                        _noteController.text = notes[index].text;
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Edit Note'),
+                            content: TextField(
+                              controller: _noteController,
+                              decoration: InputDecoration(hintText: 'Edit your note'),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  _editNote(notes[index].id, _noteController.text);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Save'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _deleteNote(notes[index].id),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  // Method to build the Notes background card with modern design
+  // Method to build the background card for Notes
   Widget _buildNotesBackgroundCard() {
-    return Container(
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
+    return Card(
+      color: Colors.white,
+      elevation: 5,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildNotesInput(),
-          const SizedBox(height: 20),
-          _buildNotesList(),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildNotesInput(),
+            const SizedBox(height: 15),
+            _buildNotesList(),
+          ],
+        ),
       ),
     );
   }
+}
+
+// Note class to represent each note
+class Note {
+  String text;
+  String id;
+
+  Note({
+    required this.text,
+    required this.id,
+  });
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'selectsoil_screen.dart'; // Ensure the path is correct based on your project structure
+import '../screens/chat_screen.dart'; // Import the ChatScreen (ensure the path is correct)
+import '../screens/selectsoil_screen.dart'; // Keep the SelectSoilScreen import if it's still needed
 
 class SoilScreen extends StatelessWidget {
   const SoilScreen({super.key});
@@ -25,11 +26,11 @@ class SoilScreen extends StatelessWidget {
           Center(
             child: GestureDetector(
               onTap: () {
-                // Navigate to SelectSoilScreen when the card is tapped
+                // Navigate to ChatScreen when the card is tapped
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SelectSoilScreen(),
+                    builder: (context) => const ChatScreen(), // Navigate to ChatScreen
                   ),
                 );
               },
@@ -59,7 +60,7 @@ class SoilScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20), // Space between the card and the text
           const Text(
-            'Soil details & Chatbox',
+            'Chatbox',
             style: TextStyle(
               fontFamily: 'Poppins',
               fontSize: 20,

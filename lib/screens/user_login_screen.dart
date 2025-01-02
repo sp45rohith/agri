@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'dashboard_screen.dart'; // Import the DashboardScreen
 import 'forgotpass_screen.dart'; // Import the ForgotPassScreen
 import 'register_screen.dart'; // Import the RegisterScreen
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class UserLoginScreen extends StatefulWidget {
   const UserLoginScreen({super.key});
@@ -235,14 +238,32 @@ class UserLoginScreenState extends State<UserLoginScreen> {
     );
   }
 
+  Future<void> _login() async {
+    final response = await http.post(
+      Uri.parse('http://172.25.81.223/agric/login.php'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': _usernameController.text, // Changed from 'phone' to 'username'
+        'password': _passwordController.text,
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (data['status'] == 'success') {
+      Fluttertoast.showToast(msg: "Login successful");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const DashboardScreen()),
+      );
+    } else {
+      Fluttertoast.showToast(msg: data['message']);
+    }
+  }
+
   Widget _buildLoginButton() {
     return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const DashboardScreen()),
-        );
-      },
+      onPressed: _login,
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 15),
         backgroundColor: const Color(0xFF00A86B),

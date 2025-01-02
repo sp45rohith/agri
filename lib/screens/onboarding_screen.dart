@@ -37,13 +37,13 @@ class OnboardingScreen extends StatelessWidget {
                       );
                     },
                     child: Container(
-                      width: size.width * 0.8,  // Increase width for better visibility
+                      width: size.width * 0.8, // Increase width for better visibility
                       height: size.height * 0.12, // Adjust height for better balance
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.green, Colors.lightGreen],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                        color: Colors.white.withOpacity(0.2), // Translucent effect
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.5), // Semi-transparent border
+                          width: 1.5,
                         ),
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
@@ -60,7 +60,7 @@ class OnboardingScreen extends StatelessWidget {
                           Icon(
                             Icons.admin_panel_settings,
                             size: size.width * 0.1, // Adjust icon size
-                            color: Colors.white, // Changed to white
+                            color: Colors.white,
                           ),
                           SizedBox(width: size.width * 0.03),
                           Text(
@@ -69,7 +69,7 @@ class OnboardingScreen extends StatelessWidget {
                               fontFamily: 'Poppins',
                               fontSize: size.width * 0.06, // Increase text size for readability
                               fontWeight: FontWeight.w700,
-                              color: Colors.white, // Changed to white
+                              color: Colors.white,
                             ),
                           ),
                         ],
@@ -95,13 +95,13 @@ class OnboardingScreen extends StatelessWidget {
                       );
                     },
                     child: Container(
-                      width: size.width * 0.8,  // Increase width for better visibility
+                      width: size.width * 0.8, // Increase width for better visibility
                       height: size.height * 0.12, // Adjust height for better balance
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.green, Colors.lightGreen],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                        color: Colors.white.withOpacity(0.2), // Translucent effect
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.5), // Semi-transparent border
+                          width: 1.5,
                         ),
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
@@ -118,7 +118,7 @@ class OnboardingScreen extends StatelessWidget {
                           Icon(
                             Icons.people_outline,
                             size: size.width * 0.1, // Adjust icon size
-                            color: Colors.white, // Changed to white
+                            color: Colors.white,
                           ),
                           SizedBox(width: size.width * 0.03),
                           Text(
@@ -127,7 +127,7 @@ class OnboardingScreen extends StatelessWidget {
                               fontFamily: 'Poppins',
                               fontSize: size.width * 0.06, // Increase text size for readability
                               fontWeight: FontWeight.w700,
-                              color: Colors.white, // Changed to white
+                              color: Colors.white,
                             ),
                           ),
                         ],
