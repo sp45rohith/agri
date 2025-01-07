@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'admn_dashboard.dart'; // Make sure to import the AdminDashboard screen
 
 class AdminLoginScreen extends StatefulWidget {
@@ -11,6 +14,10 @@ class AdminLoginScreen extends StatefulWidget {
 class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _newUsernameController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _newPhoneController = TextEditingController();
+  final TextEditingController _newEmailController = TextEditingController();
   bool _isPasswordVisible = false; // Track password visibility
   bool _isLoggedIn = false; // Track if the admin is logged in
   bool _isManagingUsers = false; // Flag to show user management form
@@ -273,11 +280,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          _isLoggedIn = true; // Simulate successful login
-        });
-      },
+      onPressed: _login,
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 15),
         backgroundColor: const Color(0xFF00A86B),
@@ -299,6 +302,28 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     );
   }
 
+  Future<void> _login() async {
+    final response = await http.post(
+      Uri.parse('http://172.25.81.223/agric/admin_login.php'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': _usernameController.text,
+        'password': _passwordController.text,
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (data['status'] == 'success') {
+      setState(() {
+        _isLoggedIn = true;
+      });
+      Fluttertoast.showToast(msg: "Login successful");
+    } else {
+      Fluttertoast.showToast(msg: data['message']);
+    }
+  }
+
   Widget _buildUserManagementForm() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,16 +333,16 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        _buildTextField(TextEditingController(), false, Icons.person),
+        _buildTextField(_newUsernameController, false, Icons.person),
         const SizedBox(height: 10),
-        _buildTextField(TextEditingController(), true, Icons.lock),
+        _buildTextField(_newPasswordController, true, Icons.lock),
+        const SizedBox(height: 10),
+        _buildTextField(_newPhoneController, false, Icons.phone),
+        const SizedBox(height: 10),
+        _buildTextField(_newEmailController, false, Icons.email),
         const SizedBox(height: 20),
         ElevatedButton(
-          onPressed: () {
-            setState(() {
-              _usersList.add("newuser@example.com");
-            });
-          },
+          onPressed: _addUser,
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF00A86B),
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -352,5 +377,33 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         ),
       ],
     );
+  }
+
+  Future<void> _addUser() async {
+    final response = await http.post(
+      Uri.parse('http://172.25.81.223/agric/add_user.php'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': _newUsernameController.text,
+        'password': _newPasswordController.text,
+        'phone': _newPhoneController.text,
+        'email': _newEmailController.text,
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (data['status'] == 'success') {
+      setState(() {
+        _usersList.add(_newEmailController.text);
+        _newUsernameController.clear();
+        _newPasswordController.clear();
+        _newPhoneController.clear();
+        _newEmailController.clear();
+      });
+      Fluttertoast.showToast(msg: "User added successfully");
+    } else {
+      Fluttertoast.showToast(msg: data['message']);
+    }
   }
 }

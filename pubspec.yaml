@@ -80,6 +80,18 @@ flutter:
     - assets/andosol.png
     - assets/tundra.png
     - assets/uzhavan.png
+    - assets/thanjavur.png
+    - assets/theni.png
+    - assets/villupuram.png
+    - assets/salem.png
+    - assets/trichy.png
+    - assets/nagapattinam.png
+    - assets/madurai.png
+    - assets/erode.png
+    - assets/coimbatore.png
+    - assets/analysis.png
+
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

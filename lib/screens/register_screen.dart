@@ -3,6 +3,7 @@ import 'user_login_screen.dart'; // Import UserLoginScreen
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/foundation.dart'; // Import kDebugMode
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -17,33 +18,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _emailController = TextEditingController();
 
   Future<void> _register() async {
-    if (_passwordController.text != _confirmPasswordController.text) {
-      Fluttertoast.showToast(msg: "Passwords do not match");
-      return;
-    }
-
-    final response = await http.post(
-      Uri.parse('http://172.25.81.223/agric/register.php'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'username': _usernameController.text, // Updated from 'full_name'
-        'phone': _phoneController.text,
-        'password': _passwordController.text,
-      }),
-    );
-
-    final data = jsonDecode(response.body);
-
-    if (data['status'] == 'success') {
-      Fluttertoast.showToast(msg: "Registration successful");
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const UserLoginScreen()),
+    if (_formKey.currentState!.validate()) {
+      final response = await http.post(
+        Uri.parse('http://172.25.80.109/agric/register.php'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'username': _usernameController.text,
+          'phone': _phoneController.text,
+          'password': _passwordController.text,
+          'email': _emailController.text,
+        }),
       );
-    } else {
-      Fluttertoast.showToast(msg: data['message']);
+
+      final data = jsonDecode(response.body);
+
+      if (data['status'] == 'success') {
+        Fluttertoast.showToast(msg: "Registration successful");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const UserLoginScreen(
+              promptMessage: "Registration successful. Please log in.",
+            ),
+          ),
+        );
+      } else {
+        Fluttertoast.showToast(msg: data['message']);
+        if (kDebugMode) {
+          print("Registration failed: ${data['message']}");
+        }
+      }
     }
   }
 
@@ -98,6 +105,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your phone number';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Email Field
+                  _buildInputField(
+                    label: 'Email',
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
                       }
                       return null;
                     },
@@ -207,6 +228,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 }

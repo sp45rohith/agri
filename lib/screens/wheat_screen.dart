@@ -8,12 +8,12 @@ class WheatScreen extends StatelessWidget {
   const WheatScreen({
     Key? key,
     this.title = 'Wheat Crops',
-    this.imageUrl = 'assets/wheat.png', // Replace with appropriate URL
+    this.imageUrl = 'assets/wheat.png',
     this.description = 'Climate: Cool, dry weather with optimal temperature 20-25°C.\n\n'
         'Soil: Loamy or clay loam with pH 6.5–7.5.\n\n'
         'Planting Time: Rabi season (Oct-Nov).\n\n'
         'Seed Rate: 100-120 kg/ha. Ensure proper seed treatment to prevent soil-borne diseases.\n\n'
-        'Fertilizer: Apply 120 kg N, 60 kg P, and 40 kg K per hectare. Split nitrogen application is ideal.\n\n'
+        'Fertilizer: Apply 120 kg N, 60 kg P, and 40 kg K per hectare.\n\n'
         'Irrigation: Critical at the crown root initiation, heading, and flowering stages.\n\n'
         'Common Pests/Diseases: Wheat stem sawfly, aphids. Diseases: Rust, smut.\n\n'
         'Harvest Time: 120-150 days after sowing.\n\n'
@@ -27,14 +27,7 @@ class WheatScreen extends StatelessWidget {
         backgroundColor: Colors.green,
         elevation: 0,
         centerTitle: true,
-        title: Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text(title),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
@@ -49,7 +42,6 @@ class WheatScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Header Section
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   decoration: BoxDecoration(
@@ -68,11 +60,9 @@ class WheatScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Wheat Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
+                  child: Image.asset(
                     imageUrl,
                     width: 200,
                     height: 153,
@@ -80,8 +70,6 @@ class WheatScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Information Cards
                 _buildInfoCard(
                   context,
                   title: 'Climate',
@@ -104,8 +92,7 @@ class WheatScreen extends StatelessWidget {
                   context,
                   title: 'Seed Rate',
                   icon: Icons.spa,
-                  content:
-                      '100-120 kg/ha. Ensure proper seed treatment to prevent soil-borne diseases.',
+                  content: '100-120 kg/ha. Ensure proper seed treatment to prevent soil-borne diseases.',
                 ),
                 _buildInfoCard(
                   context,
@@ -117,15 +104,13 @@ class WheatScreen extends StatelessWidget {
                   context,
                   title: 'Irrigation',
                   icon: Icons.water,
-                  content:
-                      'Critical at the crown root initiation, heading, and flowering stages.',
+                  content: 'Critical at the crown root initiation, heading, and flowering stages.',
                 ),
                 _buildInfoCard(
                   context,
                   title: 'Common Pests/Diseases',
                   icon: Icons.bug_report,
-                  content:
-                      'Pests: Wheat stem sawfly, aphids.\nDiseases: Rust, smut.',
+                  content: 'Pests: Wheat stem sawfly, aphids. Diseases: Rust, smut.',
                 ),
                 _buildInfoCard(
                   context,
@@ -137,15 +122,11 @@ class WheatScreen extends StatelessWidget {
                   context,
                   title: 'Modern Techniques',
                   icon: Icons.science,
-                  content:
-                      'Laser land leveling for even water distribution; adopt zero tillage for resource conservation.',
+                  content: 'Laser land leveling for even water distribution; adopt zero tillage for resource conservation.',
                 ),
                 const SizedBox(height: 20),
-
-                // Action Button (Optional)
                 ElevatedButton.icon(
                   onPressed: () {
-                    // Placeholder action
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Explore more techniques!')),
                     );
@@ -171,12 +152,8 @@ class WheatScreen extends StatelessWidget {
     );
   }
 
-  // Helper method to build info cards
-  Widget _buildInfoCard(BuildContext context, {
-    required String title,
-    required IconData icon,
-    required String content,
-  }) {
+  Widget _buildInfoCard(BuildContext context,
+      {required String title, required IconData icon, required String content}) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10),
       shape: RoundedRectangleBorder(

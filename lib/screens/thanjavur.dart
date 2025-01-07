@@ -1,25 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CornScreen extends StatelessWidget {
+class ThanjavurScreen extends StatelessWidget {
   final String title;
   final String imageUrl;
   final String description;
 
-  const CornScreen({
+  const ThanjavurScreen({
     Key? key,
-    this.title = 'Corn Crops',
-    this.imageUrl = 'assets/corn.png',
-    this.description = 'Climate: Warm, tropical to subtropical climates. Optimal temperature is 21–30°C.\n\n'
-        'Soil: Fertile, well-drained soils with pH 5.5–7.\n\n'
-        'Planting Time: June-July (Kharif) and Jan-Feb (Rabi).\n\n'
-        'Seed Rate: 20-25 kg/ha with row spacing of 60-75 cm.\n\n'
-        'Fertilizer: Apply 120 kg N, 60 kg P, and 40 kg K per hectare.\n\n'
-        'Irrigation: Requires moderate water; critical stages are tasseling and grain filling.\n\n'
-        'Common Pests/Diseases:\n'
-        '• Pests: Fall armyworm, stem borers.\n'
-        '• Diseases: Downy mildew, rust.\n\n'
-        'Harvest Time: 80-100 days for early varieties; 120-150 for late-maturing.\n\n'
-        'Modern Techniques: Precision sowing, soil testing, and hybrid varieties for high yield.',
+    this.title = 'Thanjavur Crops',
+    this.imageUrl = 'assets/thanjavur.png',
+    this.description = 'Thanjavur is renowned for rice cultivation, with paddy being the primary crop. The soil is ideal for rice production, and the irrigation system is supported by the Cauvery River.',
   }) : super(key: key);
 
   @override
@@ -29,7 +19,14 @@ class CornScreen extends StatelessWidget {
         backgroundColor: Colors.green,
         elevation: 0,
         centerTitle: true,
-        title: Text(title),
+        title: Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
@@ -52,7 +49,7 @@ class CornScreen extends StatelessWidget {
                   ),
                   child: const Center(
                     child: Text(
-                      'Corn',
+                      'Thanjavur',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
@@ -64,7 +61,7 @@ class CornScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
+                  child: Image.network(
                     imageUrl,
                     width: 200,
                     height: 153,
@@ -74,67 +71,35 @@ class CornScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 _buildInfoCard(
                   context,
-                  title: 'Climate',
-                  icon: Icons.thermostat,
+                  title: 'Crops Grown',
+                  icon: Icons.grain,
                   content:
-                      'Warm, tropical to subtropical climates. Optimal temperature is 21–30°C.',
+                      '• Primary: Paddy (Rice)\n• Secondary: Sugarcane, Banana, Coconut, Groundnuts.',
                 ),
                 _buildInfoCard(
                   context,
-                  title: 'Soil',
+                  title: 'Soil Type',
                   icon: Icons.grass,
-                  content: 'Fertile, well-drained soils with pH 5.5–7.',
-                ),
-                _buildInfoCard(
-                  context,
-                  title: 'Planting Time',
-                  icon: Icons.calendar_today,
-                  content: 'June-July (Kharif) and Jan-Feb (Rabi).',
-                ),
-                _buildInfoCard(
-                  context,
-                  title: 'Seed Rate',
-                  icon: Icons.spa,
-                  content:
-                      '20-25 kg/ha with row spacing of 60-75 cm.',
-                ),
-                _buildInfoCard(
-                  context,
-                  title: 'Fertilizer',
-                  icon: Icons.agriculture,
-                  content:
-                      'Apply 120 kg N, 60 kg P, and 40 kg K per hectare.',
+                  content: 'Alluvial and clayey soils, ideal for rice cultivation.',
                 ),
                 _buildInfoCard(
                   context,
                   title: 'Irrigation',
                   icon: Icons.water,
                   content:
-                      'Requires moderate water; critical stages are tasseling and grain filling.',
+                      'Supported by the Cauvery River and its irrigation system. Fields often have a double-cropping system (Kuruvai and Samba).',
                 ),
                 _buildInfoCard(
                   context,
-                  title: 'Common Pests/Diseases',
-                  icon: Icons.bug_report,
+                  title: 'Agricultural Techniques',
+                  icon: Icons.agriculture,
                   content:
-                      'Pests: Fall armyworm, stem borers.\nDiseases: Downy mildew, rust.',
-                ),
-                _buildInfoCard(
-                  context,
-                  title: 'Harvest Time',
-                  icon: Icons.schedule,
-                  content: '80-100 days for early varieties; 120-150 for late-maturing.',
-                ),
-                _buildInfoCard(
-                  context,
-                  title: 'Modern Techniques',
-                  icon: Icons.science,
-                  content:
-                      'Precision sowing, soil testing, and hybrid varieties for high yield.',
+                      '• Use of System of Rice Intensification (SRI) for better yield.\n• Mechanical transplantation for paddy.',
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton.icon(
                   onPressed: () {
+                    // Placeholder action
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Explore more techniques!')),
                     );

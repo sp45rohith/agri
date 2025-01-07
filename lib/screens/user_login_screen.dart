@@ -7,7 +7,9 @@ import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class UserLoginScreen extends StatefulWidget {
-  const UserLoginScreen({super.key});
+  final String? promptMessage; // Add promptMessage parameter
+
+  const UserLoginScreen({super.key, this.promptMessage});
 
   @override
   UserLoginScreenState createState() => UserLoginScreenState();
@@ -16,7 +18,53 @@ class UserLoginScreen extends StatefulWidget {
 class UserLoginScreenState extends State<UserLoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController(); // Add email controller
   bool _isPasswordVisible = false; // Track password visibility
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.promptMessage != null) {
+      Fluttertoast.showToast(msg: widget.promptMessage!);
+    }
+  }
+
+  Future<void> _login() async {
+    if (_usernameController.text.isEmpty) {
+      Fluttertoast.showToast(msg: "Please enter your username");
+      return;
+    }
+    if (_emailController.text.isEmpty) {
+      Fluttertoast.showToast(msg: "Please enter your email");
+      return;
+    }
+    if (_passwordController.text.isEmpty) {
+      Fluttertoast.showToast(msg: "Please enter your password");
+      return;
+    }
+
+    final response = await http.post(
+      Uri.parse('http://172.25.80.109/agric/login.php'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': _usernameController.text,
+        'password': _passwordController.text,
+        'email': _emailController.text, // Include email in the request
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (data['status'] == 'success') {
+      Fluttertoast.showToast(msg: "Login successful");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const DashboardScreen()),
+      );
+    } else {
+      Fluttertoast.showToast(msg: data['message']);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +133,15 @@ class UserLoginScreenState extends State<UserLoginScreen> {
                             _usernameController,
                             false,
                             Icons.person, // Add icon for username
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Email field
+                          _buildLabel('Email'),
+                          _buildTextField(
+                            _emailController,
+                            false,
+                            Icons.email, // Add icon for email
                           ),
                           const SizedBox(height: 20),
 
@@ -238,29 +295,6 @@ class UserLoginScreenState extends State<UserLoginScreen> {
     );
   }
 
-  Future<void> _login() async {
-    final response = await http.post(
-      Uri.parse('http://172.25.81.223/agric/login.php'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'username': _usernameController.text, // Changed from 'phone' to 'username'
-        'password': _passwordController.text,
-      }),
-    );
-
-    final data = jsonDecode(response.body);
-
-    if (data['status'] == 'success') {
-      Fluttertoast.showToast(msg: "Login successful");
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const DashboardScreen()),
-      );
-    } else {
-      Fluttertoast.showToast(msg: data['message']);
-    }
-  }
-
   Widget _buildLoginButton() {
     return ElevatedButton(
       onPressed: _login,
@@ -289,6 +323,7 @@ class UserLoginScreenState extends State<UserLoginScreen> {
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
+    _emailController.dispose(); // Dispose email controller
     super.dispose();
   }
 }

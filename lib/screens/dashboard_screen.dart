@@ -3,7 +3,8 @@ import 'package:myapp/screens/account_screen.dart';
 import 'package:myapp/screens/crop_screen.dart';
 import 'package:myapp/screens/selectsoil_screen.dart';
 import 'package:myapp/screens/soil_screen.dart';
-
+import 'package:myapp/screens/location_screen.dart'; // Import LocationScreen
+import 'package:myapp/screens/soil_analysis_screen.dart'; // Import SoilInputScreen
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -93,6 +94,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     // Search Bar
                     _buildSearchBar(),
                     const SizedBox(height: 20),
+                    // New Card with Background Image
+                    _buildImageCard(),
+                    const SizedBox(height: 20),
                     // Display filtered category cards
                     if (filteredCategories.isEmpty)
                       const Text(
@@ -115,6 +119,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => const SelectSoilScreen()), // Navigate to SelectSoilScreen
+                              );
+                            } else if (category['title'] == 'Location') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const LocationScreen()), // Navigate to LocationScreen
                               );
                             }
                           },
@@ -223,6 +232,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  // Card with Background Image
+  Widget _buildImageCard() {
+    return GestureDetector(
+      onTap: () {
+        // Navigate to SoilInputScreen when the "Soil Analysis" card is tapped
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SoilAnalysisScreen()),
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        height: 200,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/analysis.png'), // Update this with your desired image
+            fit: BoxFit.cover,
+          ),
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 6,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            'Soil analysis!',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  blurRadius: 10,
+                  color: Colors.black.withOpacity(0.5),
+                  offset: Offset(2, 2),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   // Category Card with gradient background and shadow
   Widget _buildCategoryCard(
     BuildContext context,
@@ -247,7 +304,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
               blurRadius: 6,
-              offset: const Offset(0, 4),
+              offset: Offset(0, 4),
             ),
           ],
         ),
@@ -255,16 +312,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Image.asset(
               imageUrl,
-              width: 60,
-              height: 60,
+              width: 50,
+              height: 50,
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 15),
             Text(
               title,
-              style: const TextStyle(
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.bold,
+              style: TextStyle(
                 fontSize: 18,
+                fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
@@ -274,148 +330,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // Method to build the Notes input field
-  Widget _buildNotesInput() {
-    return TextField(
-      controller: _noteController,
-      decoration: InputDecoration(
-        hintText: 'Add a note about your crop...',
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
-        ),
-        suffixIcon: IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: _addNote,
-        ),
-      ),
-    );
-  }
-
-  // Method to add a note to the notes list
-  void _addNote() {
-    if (_noteController.text.isNotEmpty) {
-      setState(() {
-        notes.add(Note(text: _noteController.text, id: DateTime.now().toString()));
-        _noteController.clear(); // Clear the input field after adding the note
-      });
-    }
-  }
-
-  // Method to delete a note
-  void _deleteNote(String id) {
-    setState(() {
-      notes.removeWhere((note) => note.id == id); // Remove note with matching ID
-    });
-  }
-
-  // Method to edit a note
-  void _editNote(String id, String newText) {
-    setState(() {
-      Note note = notes.firstWhere((note) => note.id == id);
-      note.text = newText; // Update the note text
-    });
-  }
-
-  // Method to build the list of saved notes with delete and edit option
-  Widget _buildNotesList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: notes.length,
-      itemBuilder: (context, index) {
-        return Card(
-          margin: const EdgeInsets.only(bottom: 10),
-          elevation: 5,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+  // Notes Section with background card
+  Widget _buildNotesBackgroundCard() {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 6,
+            offset: Offset(0, 3),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(notes[index].text),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.blue),
-                      onPressed: () {
-                        _noteController.text = notes[index].text;
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Edit Note'),
-                            content: TextField(
-                              controller: _noteController,
-                              decoration: InputDecoration(hintText: 'Edit your note'),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  _editNote(notes[index].id, _noteController.text);
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Save'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Cancel'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _deleteNote(notes[index].id),
-                    ),
-                  ],
-                ),
-              ],
+        ],
+      ),
+      child: Column(
+        children: [
+          TextField(
+            controller: _noteController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: 'Write a note...',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: Colors.white,
             ),
           ),
-        );
-      },
-    );
-  }
-
-  // Method to build the background card for Notes
-  Widget _buildNotesBackgroundCard() {
-    return Card(
-      color: Colors.white,
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildNotesInput(),
-            const SizedBox(height: 15),
-            _buildNotesList(),
-          ],
-        ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                notes.add(Note(_noteController.text));
+                _noteController.clear();
+              });
+            },
+            child: const Text('Save Note'),
+          ),
+        ],
       ),
     );
   }
 }
 
-// Note class to represent each note
 class Note {
-  String text;
-  String id;
+  String content;
 
-  Note({
-    required this.text,
-    required this.id,
-  });
+  Note(this.content);
 }

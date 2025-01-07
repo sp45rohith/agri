@@ -134,7 +134,6 @@ class AccountScreen extends StatelessWidget {
           profileName: "",  // Empty fields
           contactNo: "",
           userName: "",
-          dob: "",
           email: "",
         ),
       ),

@@ -4,28 +4,20 @@ import 'dart:convert'; // Import for jsonEncode and jsonDecode
 import 'package:http/http.dart' as http; // Import for http requests
 import 'package:fluttertoast/fluttertoast.dart'; // Import for Fluttertoast
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({
+class AdminProfileScreen extends StatefulWidget {
+  const AdminProfileScreen({
     super.key,
-    this.profileName = "",
-    this.contactNo = "",
-    this.userName = "",
-    this.email = "",
+    required this.userName, // Make userName required
   });
 
-  final String profileName;
-  final String contactNo;
   final String userName;
-  final String email;
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<AdminProfileScreen> createState() => _AdminProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _AdminProfileScreenState extends State<AdminProfileScreen> {
   late TextEditingController profileNameController;
-  late TextEditingController contactNoController;
-  late TextEditingController userNameController;
   late TextEditingController emailController;
 
   bool isEditing = false;
@@ -33,16 +25,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    profileNameController = TextEditingController(text: widget.profileName);
-    contactNoController = TextEditingController(text: widget.contactNo);
-    userNameController = TextEditingController(text: widget.userName);
-    emailController = TextEditingController(text: widget.email);
+    profileNameController = TextEditingController();
+    emailController = TextEditingController();
     _fetchProfileData(); // Fetch profile data on init
   }
 
   Future<void> _fetchProfileData() async {
     final response = await http.post(
-      Uri.parse('http://172.25.80.109/agric/get_user_profile.php'),
+      Uri.parse('http://172.25.80.109/agric/get_admin_profile.php'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'username': widget.userName}),
     );
@@ -52,7 +42,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (data['status'] == 'success') {
       setState(() {
         profileNameController.text = data['data']['username'];
-        contactNoController.text = data['data']['phone'];
         emailController.text = data['data']['email'];
       });
     } else {
@@ -63,8 +52,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void dispose() {
     profileNameController.dispose();
-    contactNoController.dispose();
-    userNameController.dispose();
     emailController.dispose();
     super.dispose();
   }
@@ -73,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile"),
+        title: const Text("Admin Profile"),
         backgroundColor: const Color(0xFF00A86B),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -154,9 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Editable fields
               _buildInputSection("Profile Name", profileNameController),
               const SizedBox(height: 20),
-              _buildInputSection("Contact No.", contactNoController),
-              const SizedBox(height: 20),
-              _buildInputSection("User Name", userNameController),
+              _buildInputSection("User Name", TextEditingController(text: widget.userName), enabled: false),
               const SizedBox(height: 20),
               _buildInputSection("E-mail", emailController),
               const SizedBox(height: 40),
@@ -168,8 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // Handle save action here
                     if (kDebugMode) {
                       print("Profile Name: ${profileNameController.text}");
-                      print("Contact No.: ${contactNoController.text}");
-                      print("User Name: ${userNameController.text}");
+                      print("User Name: ${widget.userName}");
                       print("E-mail: ${emailController.text}");
                     }
                     setState(() {
@@ -198,7 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildInputSection(
-      String label, TextEditingController textEditingController) {
+      String label, TextEditingController textEditingController, {bool enabled = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -221,7 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: TextField(
             controller: textEditingController,
-            enabled: isEditing,
+            enabled: isEditing && enabled,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 16),
