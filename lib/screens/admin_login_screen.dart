@@ -303,24 +303,28 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   }
 
   Future<void> _login() async {
-    final response = await http.post(
-      Uri.parse('http://172.25.81.223/agric/admin_login.php'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'username': _usernameController.text,
-        'password': _passwordController.text,
-      }),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse('http://172.25.81.223/agric/admin_login.php'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'username': _usernameController.text,
+          'password': _passwordController.text,
+        }),
+      ).timeout(const Duration(seconds: 10)); // Increase timeout duration
 
-    final data = jsonDecode(response.body);
+      final data = jsonDecode(response.body);
 
-    if (data['status'] == 'success') {
-      setState(() {
-        _isLoggedIn = true;
-      });
-      Fluttertoast.showToast(msg: "Login successful");
-    } else {
-      Fluttertoast.showToast(msg: data['message']);
+      if (data['status'] == 'success') {
+        setState(() {
+          _isLoggedIn = true;
+        });
+        Fluttertoast.showToast(msg: "Login successful");
+      } else {
+        Fluttertoast.showToast(msg: data['message']);
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Failed to connect to the server. Please try again.");
     }
   }
 

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'dashboard_screen.dart'; // Import the DashboardScreen
-import 'forgotpass_screen.dart'; // Import the ForgotPassScreen
-import 'register_screen.dart'; // Import the RegisterScreen
+import 'dashboard_screen.dart';
+import 'admn_dashboard.dart'; // Ensure this import is correct
+import 'forgotpass_screen.dart';
+import 'register_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fluttertoast/fluttertoast.dart'; // Ensure this import is correct
 
 class UserLoginScreen extends StatefulWidget {
-  final String? promptMessage; // Add promptMessage parameter
+  final String? promptMessage;
 
   const UserLoginScreen({super.key, this.promptMessage});
 
@@ -18,8 +19,8 @@ class UserLoginScreen extends StatefulWidget {
 class UserLoginScreenState extends State<UserLoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController(); // Add email controller
-  bool _isPasswordVisible = false; // Track password visibility
+  bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -30,39 +31,60 @@ class UserLoginScreenState extends State<UserLoginScreen> {
   }
 
   Future<void> _login() async {
+    // Simple validation for username and password
     if (_usernameController.text.isEmpty) {
       Fluttertoast.showToast(msg: "Please enter your username");
       return;
     }
-    if (_emailController.text.isEmpty) {
-      Fluttertoast.showToast(msg: "Please enter your email");
-      return;
-    }
-    if (_passwordController.text.isEmpty) {
-      Fluttertoast.showToast(msg: "Please enter your password");
+    if (_passwordController.text.isEmpty || _passwordController.text.length < 6) {
+      Fluttertoast.showToast(msg: "Password must be at least 6 characters long");
       return;
     }
 
-    final response = await http.post(
-      Uri.parse('http://172.25.80.109/agric/login.php'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'username': _usernameController.text,
-        'password': _passwordController.text,
-        'email': _emailController.text, // Include email in the request
-      }),
-    );
+    setState(() {
+      _isLoading = true;
+    });
 
-    final data = jsonDecode(response.body);
-
-    if (data['status'] == 'success') {
-      Fluttertoast.showToast(msg: "Login successful");
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const DashboardScreen()),
+    try {
+      final response = await http.post(
+        Uri.parse('http://172.25.80.109/agric/login.php'),  // Ensure this URL is correct
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'username': _usernameController.text,
+          'password': _passwordController.text,
+        }),
       );
-    } else {
-      Fluttertoast.showToast(msg: data['message']);
+
+      final data = jsonDecode(response.body);
+
+      if (data['status'] == 'success') {
+        Fluttertoast.showToast(msg: "Login successful");
+
+        String userType = data['user_type'];  // Ensure this field exists in the response
+
+        // Navigate based on the user type
+        if (userType == 'admin') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const AdminDashboard()),  // Admin dashboard
+          );
+        } else if (userType == 'user') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const DashboardScreen()),  // Regular user dashboard
+          );
+        } else {
+          Fluttertoast.showToast(msg: "Unknown user type: $userType");
+        }
+      } else {
+        Fluttertoast.showToast(msg: data['message']);
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: "An error occurred: $e");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -89,7 +111,6 @@ class UserLoginScreenState extends State<UserLoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Logo or Title
                     const Text(
                       "Welcome Back!",
                       style: TextStyle(
@@ -127,25 +148,14 @@ class UserLoginScreenState extends State<UserLoginScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Username field
                           _buildLabel('User Name'),
                           _buildTextField(
                             _usernameController,
                             false,
-                            Icons.person, // Add icon for username
+                            Icons.person,
                           ),
                           const SizedBox(height: 20),
 
-                          // Email field
-                          _buildLabel('Email'),
-                          _buildTextField(
-                            _emailController,
-                            false,
-                            Icons.email, // Add icon for email
-                          ),
-                          const SizedBox(height: 20),
-
-                          // Password field with visibility toggle
                           _buildLabel('Password'),
                           _buildPasswordTextField(),
                           Align(
@@ -171,12 +181,15 @@ class UserLoginScreenState extends State<UserLoginScreen> {
                           ),
                           const SizedBox(height: 30),
 
-                          // Login button
-                          _buildLoginButton(),
+                          // Login button or loading indicator
+                          _isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : _buildLoginButton(),
 
                           const SizedBox(height: 10),
 
-                          // Register link
                           Center(
                             child: TextButton(
                               onPressed: () {
@@ -286,7 +299,7 @@ class UserLoginScreenState extends State<UserLoginScreen> {
             ),
             onPressed: () {
               setState(() {
-                _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
+                _isPasswordVisible = !_isPasswordVisible;
               });
             },
           ),
@@ -319,11 +332,10 @@ class UserLoginScreenState extends State<UserLoginScreen> {
     );
   }
 
-  @override
+@override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
-    _emailController.dispose(); // Dispose email controller
     super.dispose();
   }
 }

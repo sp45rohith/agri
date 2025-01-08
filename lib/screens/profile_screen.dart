@@ -7,36 +7,36 @@ import 'package:fluttertoast/fluttertoast.dart'; // Import for Fluttertoast
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     super.key,
-    this.profileName = "",
-    this.contactNo = "",
     this.userName = "",
-    this.email = "",
+    this.profileName = "", // Add profileName parameter
+    this.contactNo = "", // Add contactNo parameter
   });
 
-  final String profileName;
-  final String contactNo;
   final String userName;
-  final String email;
+  final String profileName; // Add profileName field
+  final String contactNo; // Add contactNo field
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late TextEditingController profileNameController;
+  late TextEditingController firstNameController;
+  late TextEditingController lastNameController;
   late TextEditingController contactNoController;
   late TextEditingController userNameController;
-  late TextEditingController emailController;
+  late TextEditingController profileNameController; // Add profileNameController
 
   bool isEditing = false;
 
   @override
   void initState() {
     super.initState();
-    profileNameController = TextEditingController(text: widget.profileName);
-    contactNoController = TextEditingController(text: widget.contactNo);
+    firstNameController = TextEditingController();
+    lastNameController = TextEditingController();
+    contactNoController = TextEditingController(text: widget.contactNo); // Initialize contactNoController
     userNameController = TextEditingController(text: widget.userName);
-    emailController = TextEditingController(text: widget.email);
+    profileNameController = TextEditingController(text: widget.profileName); // Initialize profileNameController
     _fetchProfileData(); // Fetch profile data on init
   }
 
@@ -51,10 +51,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (data['status'] == 'success') {
       setState(() {
-        profileNameController.text = data['data']['username'];
+        firstNameController.text = data['data']['first_name'];
+        lastNameController.text = data['data']['last_name'];
         contactNoController.text = data['data']['phone'];
-        emailController.text = data['data']['email'];
+        profileNameController.text = data['data']['profile_name']; // Set profileNameController text
       });
+    } else {
+      Fluttertoast.showToast(msg: data['message']);
+    }
+  }
+
+  Future<void> _updateProfile() async {
+    final response = await http.post(
+      Uri.parse('http://172.25.80.109/agric/update_user_profile.php'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': widget.userName,
+        'firstName': firstNameController.text,
+        'lastName': lastNameController.text,
+        'contactNo': contactNoController.text,
+        'profileName': profileNameController.text, // Include profileName in the update
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (data['status'] == 'success') {
+      Fluttertoast.showToast(msg: "Profile updated successfully.");
     } else {
       Fluttertoast.showToast(msg: data['message']);
     }
@@ -62,10 +85,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void dispose() {
-    profileNameController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     contactNoController.dispose();
     userNameController.dispose();
-    emailController.dispose();
+    profileNameController.dispose(); // Dispose profileNameController
     super.dispose();
   }
 
@@ -152,13 +176,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 20),
 
               // Editable fields
-              _buildInputSection("Profile Name", profileNameController),
+              _buildInputSection("Profile Name", profileNameController), // Add profileName field
+              const SizedBox(height: 20),
+              _buildInputSection("First Name", firstNameController),
+              const SizedBox(height: 20),
+              _buildInputSection("Last Name", lastNameController),
               const SizedBox(height: 20),
               _buildInputSection("Contact No.", contactNoController),
               const SizedBox(height: 20),
               _buildInputSection("User Name", userNameController),
-              const SizedBox(height: 20),
-              _buildInputSection("E-mail", emailController),
               const SizedBox(height: 40),
 
               // Save Button
@@ -166,12 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle save action here
-                    if (kDebugMode) {
-                      print("Profile Name: ${profileNameController.text}");
-                      print("Contact No.: ${contactNoController.text}");
-                      print("User Name: ${userNameController.text}");
-                      print("E-mail: ${emailController.text}");
-                    }
+                    _updateProfile(); // Call the update API
                     setState(() {
                       isEditing = false;
                     });
