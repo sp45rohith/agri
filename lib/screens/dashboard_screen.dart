@@ -364,13 +364,85 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                notes.add(Note(_noteController.text));
+                notes.add(Note(
+                  content: _noteController.text,
+                  isEditing: false,
+                ));
                 _noteController.clear();
               });
             },
             child: const Text('Save Note'),
           ),
+          const SizedBox(height: 20),
+          // Display saved notes
+          ...notes.map((note) => _buildNoteCard(note)).toList(),
         ],
+      ),
+    );
+  }
+
+  // Note Card with edit and delete options
+  Widget _buildNoteCard(Note note) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (note.isEditing)
+              TextField(
+                controller: TextEditingController(text: note.content),
+                maxLines: 3,
+                onChanged: (value) {
+                  note.content = value;
+                },
+                decoration: InputDecoration(
+                  hintText: 'Edit your note...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+              )
+            else
+              Text(
+                note.content,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
+              ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: Icon(note.isEditing ? Icons.check : Icons.edit),
+                  onPressed: () {
+                    setState(() {
+                      note.isEditing = !note.isEditing;
+                    });
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    setState(() {
+                      notes.remove(note);
+                    });
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -378,6 +450,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 class Note {
   String content;
+  bool isEditing;
 
-  Note(this.content);
+  Note({
+    required this.content,
+    this.isEditing = false,
+  });
 }

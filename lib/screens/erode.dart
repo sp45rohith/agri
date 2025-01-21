@@ -61,7 +61,7 @@ class ErodeScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
+                  child: Image.asset(
                     imageUrl,
                     width: 200,
                     height: 153,

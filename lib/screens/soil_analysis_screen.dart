@@ -9,15 +9,16 @@ class SoilAnalysisScreen extends StatefulWidget {
 class _SoilAnalysisScreenState extends State<SoilAnalysisScreen> {
   TextEditingController _phController = TextEditingController();
   TextEditingController _textureController = TextEditingController();
+
   List<String> _recommendedCrops = [];
-  String _selectedTexture = 'Loamy'; // Default value for dropdown
+  String _selectedTexture = ''; // Default value for dropdown
+  String _selectedLocation = ''; // Default value for location dropdown
 
   // Simulated API response (Replace with real API call later)
   List<Map<String, dynamic>> crops = [
     {'name': 'Wheat', 'pH': [6.0, 7.5], 'texture': ['Loamy']},
     {'name': 'Rice', 'pH': [5.5, 6.5], 'texture': ['Clayey', 'Loamy']},
     {'name': 'Peanuts', 'pH': [6.0, 7.0], 'texture': ['Sandy']},
-    
   ];
 
   void _getRecommendations() {
@@ -26,7 +27,8 @@ class _SoilAnalysisScreenState extends State<SoilAnalysisScreen> {
 
     List<String> recommendations = [];
     for (var crop in crops) {
-      if (pH >= crop['pH'][0] && pH <= crop['pH'][1] &&
+      if (pH >= crop['pH'][0] &&
+          pH <= crop['pH'][1] &&
           crop['texture'].contains(texture)) {
         recommendations.add(crop['name']);
       }
@@ -38,13 +40,27 @@ class _SoilAnalysisScreenState extends State<SoilAnalysisScreen> {
   }
 
   void _navigateToRecommendations() {
+    // Validate input fields before navigating
+    if (_phController.text.isEmpty || _selectedTexture.isEmpty || _selectedLocation.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill all fields and select a location.'),
+        ),
+      );
+      return;
+    }
+
     double pH = double.parse(_phController.text);
     String texture = _selectedTexture;
 
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RecommendationsScreen(pH: pH, texture: texture),
+        builder: (context) => RecommendationsScreen(
+          pH: pH,
+          texture: texture,
+          location: _selectedLocation, // Pass the selected location
+        ),
       ),
     );
   }
@@ -75,7 +91,7 @@ class _SoilAnalysisScreenState extends State<SoilAnalysisScreen> {
               TextField(
                 controller: _phController,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Enter pH level of soil',
                   border: OutlineInputBorder(),
                   filled: true,
@@ -86,7 +102,7 @@ class _SoilAnalysisScreenState extends State<SoilAnalysisScreen> {
               // Soil Texture Dropdown Field
               DropdownButtonFormField<String>(
                 value: _selectedTexture.isNotEmpty ? _selectedTexture : null,
-                hint: Text('Select soil texture'), // Hint text before selection
+                hint: const Text('Select soil texture'),
                 items: ['Loamy', 'Clayey', 'Sandy'].map((String texture) {
                   return DropdownMenuItem<String>(
                     value: texture,
@@ -96,10 +112,10 @@ class _SoilAnalysisScreenState extends State<SoilAnalysisScreen> {
                 onChanged: (newValue) {
                   setState(() {
                     _selectedTexture = newValue!;
-                    _textureController.text = _selectedTexture; // Update controller with selected value
+                    _textureController.text = _selectedTexture;
                   });
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Select Soil Texture',
                   border: OutlineInputBorder(),
                   filled: true,
@@ -107,10 +123,43 @@ class _SoilAnalysisScreenState extends State<SoilAnalysisScreen> {
                 ),
               ),
               const SizedBox(height: 20),
+              // Location Dropdown Field
+              DropdownButtonFormField<String>(
+                value: _selectedLocation.isNotEmpty ? _selectedLocation : null,
+                hint: const Text('Select Location'),
+                items: [
+                  'Thanjavur',
+                  'Erode',
+                  'Coimbatore',
+                  'Salem',
+                  'Madurai',
+                  'Thiruchi',
+                  'Nagapattinam',
+                  'Theni',
+                  'Villupuram',
+                ].map((String location) {
+                  return DropdownMenuItem<String>(
+                    value: location,
+                    child: Text(location),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    _selectedLocation = newValue!;
+                  });
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Select Location',
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _navigateToRecommendations, // Navigate to recommendations screen
+                onPressed: _navigateToRecommendations,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00A86B), // Changed from 'primary' to 'backgroundColor'
+                  backgroundColor: const Color(0xFF00A86B),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -125,12 +174,12 @@ class _SoilAnalysisScreenState extends State<SoilAnalysisScreen> {
                 ),
               const SizedBox(height: 10),
               ..._recommendedCrops.map((crop) => Card(
-                margin: const EdgeInsets.only(bottom: 10),
-                elevation: 5,
-                child: ListTile(
-                  title: Text(crop),
-                ),
-              )),
+                    margin: const EdgeInsets.only(bottom: 10),
+                    elevation: 5,
+                    child: ListTile(
+                      title: Text(crop),
+                    ),
+                  )),
             ],
           ),
         ),

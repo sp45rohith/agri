@@ -14,7 +14,9 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController(); // Updated from _fullNameController
+  final _usernameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -23,10 +25,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       final response = await http.post(
-        Uri.parse('http://172.25.80.109/agric/register.php'),
+        Uri.parse('http://172.25.81.29/agric/register.php'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'username': _usernameController.text,
+          'firstName': _firstNameController.text,
+          'lastName': _lastNameController.text,
           'phone': _phoneController.text,
           'password': _passwordController.text,
           'email': _emailController.text,
@@ -85,12 +89,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   // Username Field
                   _buildInputField(
-                    label: 'Username', // Updated from 'Full Name'
-                    controller: _usernameController, // Updated from _fullNameController
+                    label: 'Username',
+                    controller: _usernameController,
                     keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your username'; // Updated from 'full name'
+                        return 'Please enter your username';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
+                  // First Name Field
+                  _buildInputField(
+                    label: 'First Name',
+                    controller: _firstNameController,
+                    keyboardType: TextInputType.text,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your first name';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Last Name Field
+                  _buildInputField(
+                    label: 'Last Name',
+                    controller: _lastNameController,
+                    keyboardType: TextInputType.text,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your last name';
                       }
                       return null;
                     },
@@ -224,7 +256,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _usernameController.dispose(); // Updated from _fullNameController
+    _usernameController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();

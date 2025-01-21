@@ -129,7 +129,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
         if (_formKey.currentState!.validate()) {
           if (_newPasswordController.text == _confirmPasswordController.text) {
             final response = await http.post(
-              Uri.parse('http://172.25.80.109/agric/reset_password.php'),
+              Uri.parse('http://172.25.81.29/agric/reset_password.php'),
               headers: {'Content-Type': 'application/json'},
               body: jsonEncode({
                 'username': _usernameController.text,

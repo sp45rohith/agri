@@ -305,7 +305,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   Future<void> _login() async {
     try {
       final response = await http.post(
-        Uri.parse('http://172.25.81.223/agric/admin_login.php'),
+        Uri.parse('http://172.25.81.29/agric/admin_login.php'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'username': _usernameController.text,
@@ -385,7 +385,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
   Future<void> _addUser() async {
     final response = await http.post(
-      Uri.parse('http://172.25.81.223/agric/add_user.php'),
+      Uri.parse('http://172.25.81.29/agric/add_user.php'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'username': _newUsernameController.text,

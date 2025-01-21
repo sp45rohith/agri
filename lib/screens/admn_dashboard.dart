@@ -3,6 +3,7 @@ import 'package:myapp/screens/account_screen.dart';
 import 'package:myapp/screens/crop_screen.dart';
 import 'package:myapp/screens/selectsoil_screen.dart';
 import 'package:myapp/screens/soil_screen.dart';
+import 'package:myapp/screens/admin_chat_screen.dart'; // Import AdminChatScreen
 
 
 class AdminDashboard extends StatefulWidget {
@@ -36,6 +37,34 @@ class _AdminDashboardState extends State<AdminDashboard> {
         title: const Text('Admin Dashboard'),
         backgroundColor: const Color(0xFF00A86B),
         elevation: 0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: TextButton(
+              onPressed: () {
+                // Navigate to AdminChatScreen when the "Ask" button is pressed
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AdminChatScreen()),
+                );
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Ask',
+                style: TextStyle(
+                  color: Color(0xFF00A86B),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

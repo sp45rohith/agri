@@ -7,14 +7,10 @@ import 'package:fluttertoast/fluttertoast.dart'; // Import for Fluttertoast
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     super.key,
-    this.userName = "",
-    this.profileName = "", // Add profileName parameter
-    this.contactNo = "", // Add contactNo parameter
+    required this.userName,
   });
 
   final String userName;
-  final String profileName; // Add profileName field
-  final String contactNo; // Add contactNo field
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -25,7 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController lastNameController;
   late TextEditingController contactNoController;
   late TextEditingController userNameController;
-  late TextEditingController profileNameController; // Add profileNameController
+  late TextEditingController emailController;
 
   bool isEditing = false;
 
@@ -34,52 +30,94 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     firstNameController = TextEditingController();
     lastNameController = TextEditingController();
-    contactNoController = TextEditingController(text: widget.contactNo); // Initialize contactNoController
+    contactNoController = TextEditingController();
     userNameController = TextEditingController(text: widget.userName);
-    profileNameController = TextEditingController(text: widget.profileName); // Initialize profileNameController
+    emailController = TextEditingController();
     _fetchProfileData(); // Fetch profile data on init
   }
 
   Future<void> _fetchProfileData() async {
-    final response = await http.post(
-      Uri.parse('http://172.25.80.109/agric/get_user_profile.php'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'username': widget.userName}),
-    );
+    try {
+      if (kDebugMode) {
+        print('Fetching profile data for username: ${widget.userName}');
+      }
 
-    final data = jsonDecode(response.body);
+      final response = await http.post(
+        Uri.parse('http://172.25.81.29/agric/get_user_profile.php'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'username': widget.userName}),
+      );
 
-    if (data['status'] == 'success') {
-      setState(() {
-        firstNameController.text = data['data']['first_name'];
-        lastNameController.text = data['data']['last_name'];
-        contactNoController.text = data['data']['phone'];
-        profileNameController.text = data['data']['profile_name']; // Set profileNameController text
-      });
-    } else {
-      Fluttertoast.showToast(msg: data['message']);
+      if (kDebugMode) {
+        print('HTTP status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+
+      final data = jsonDecode(response.body);
+
+      if (kDebugMode) {
+        print('Decoded response: $data');
+      }
+
+      if (data['status'] == 'success' && data['data'] != null) {
+        setState(() {
+          firstNameController.text = data['data']['first_name'] ?? '';
+          lastNameController.text = data['data']['last_name'] ?? '';
+          contactNoController.text = data['data']['phone'] ?? '';
+          emailController.text = data['data']['email'] ?? '';
+        });
+        if (kDebugMode) {
+          print('Profile data fetched: ${data['data']}');
+        }
+      } else {
+        Fluttertoast.showToast(msg: data['message'] ?? "Failed to fetch profile.");
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching profile: $e');
+      }
+      Fluttertoast.showToast(msg: "Failed to fetch profile data.");
     }
   }
 
   Future<void> _updateProfile() async {
-    final response = await http.post(
-      Uri.parse('http://172.25.80.109/agric/update_user_profile.php'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
+    try {
+      final requestBody = jsonEncode({
         'username': widget.userName,
         'firstName': firstNameController.text,
         'lastName': lastNameController.text,
         'contactNo': contactNoController.text,
-        'profileName': profileNameController.text, // Include profileName in the update
-      }),
-    );
+        'email': emailController.text,
+      });
 
-    final data = jsonDecode(response.body);
+      if (kDebugMode) {
+        print('Update request body: $requestBody');
+      }
 
-    if (data['status'] == 'success') {
-      Fluttertoast.showToast(msg: "Profile updated successfully.");
-    } else {
-      Fluttertoast.showToast(msg: data['message']);
+      final response = await http.post(
+        Uri.parse('http://172.25.81.29/agric/update_user_profile.php'),
+        headers: {'Content-Type': 'application/json'},
+        body: requestBody,
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (data['status'] == 'success') {
+        Fluttertoast.showToast(msg: "Profile updated successfully.");
+        if (kDebugMode) {
+          print('Profile updated successfully: ${data['message']}');
+        }
+      } else {
+        Fluttertoast.showToast(msg: data['message'] ?? "Failed to update profile.");
+        if (kDebugMode) {
+          print('Failed to update profile: ${data['message']}');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error updating profile: $e');
+      }
+      Fluttertoast.showToast(msg: "Failed to update profile.");
     }
   }
 
@@ -89,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     lastNameController.dispose();
     contactNoController.dispose();
     userNameController.dispose();
-    profileNameController.dispose(); // Dispose profileNameController
+    emailController.dispose();
     super.dispose();
   }
 
@@ -137,47 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               const SizedBox(height: 20),
 
-              // Editable Profile Picture Section
-              Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  CircleAvatar(
-                    radius: 80,
-                    backgroundColor: Colors.grey[200],
-                    backgroundImage: const NetworkImage(
-                      'https://dashboard.codeparrot.ai/api/assets/Z11JcxvKm34NfulX',
-                    ),
-                  ),
-                  if (isEditing)
-                    Positioned(
-                      bottom: 10,
-                      right: 10,
-                      child: GestureDetector(
-                        onTap: () {
-                          // Handle profile picture edit action here
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF00A86B),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
               // Editable fields
-              _buildInputSection("Profile Name", profileNameController), // Add profileName field
-              const SizedBox(height: 20),
               _buildInputSection("First Name", firstNameController),
               const SizedBox(height: 20),
               _buildInputSection("Last Name", lastNameController),
@@ -185,13 +183,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildInputSection("Contact No.", contactNoController),
               const SizedBox(height: 20),
               _buildInputSection("User Name", userNameController),
+              const SizedBox(height: 20),
+              _buildInputSection("E-mail", emailController),
               const SizedBox(height: 40),
 
               // Save Button
               if (isEditing)
                 ElevatedButton(
                   onPressed: () {
-                    // Handle save action here
                     _updateProfile(); // Call the update API
                     setState(() {
                       isEditing = false;

@@ -131,8 +131,7 @@ class AccountScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => const ProfileScreen(
-          profileName: "",  // Empty fields
-          userName: "",
+          userName: "",  // Pass only userName
         ),
       ),
     );

@@ -23,7 +23,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/1.png
-    - assets/2.png
+    - assets/onboarding.png
     - assets/crops.png
     - assets/location.png
     - assets/back.png

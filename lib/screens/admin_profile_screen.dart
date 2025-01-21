@@ -32,7 +32,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
 
   Future<void> _fetchProfileData() async {
     final response = await http.post(
-      Uri.parse('http://172.25.80.109/agric/get_admin_profile.php'),
+      Uri.parse('http://172.25.81.29/agric/get_admin_profile.php'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'username': widget.userName}),
     );

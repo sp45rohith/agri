@@ -47,7 +47,7 @@ class UserLoginScreenState extends State<UserLoginScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://172.25.80.109/agric/login.php'),  // Ensure this URL is correct
+        Uri.parse('http://172.25.81.29/agric/login.php'),  // Ensure this URL is correct
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'username': _usernameController.text,
@@ -91,6 +91,16 @@ class UserLoginScreenState extends State<UserLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Login"),
+        backgroundColor: const Color(0xFF00A86B),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous screen
+          },
+        ),
+      ),
       body: Stack(
         children: [
           // Gradient background
